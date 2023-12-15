@@ -11,6 +11,10 @@ public class Plant implements WorldElement{
 
     public Vector2d getPosition() { return position; }
 
+    public int getEnergy() {
+        return energy;
+    }
+
     @Override
     public String toString() {
         return "*";

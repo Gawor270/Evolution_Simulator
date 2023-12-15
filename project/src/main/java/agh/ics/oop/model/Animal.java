@@ -9,16 +9,31 @@ public class Animal implements WorldElement {
     private MapDirection orientation;
     private Vector2d position;
 
+    private int energy;
     private final Map<MapDirection, String> representation;
     public Animal() {
         this.position = new Vector2d(2,2);
         this.orientation = MapDirection.NORTH;
         representation = new HashMap<>(){{
            put(MapDirection.NORTH, "^");
-           put(MapDirection.SOUTH, "v");
-           put(MapDirection.WEST, "<");
+           put(MapDirection.NORTH_EAST, "7");
            put(MapDirection.EAST, ">");
+           put(MapDirection.SOUTH_EAST, "J");
+           put(MapDirection.SOUTH, "v");
+           put(MapDirection.SOUTH_WEST, "L");
+           put(MapDirection.WEST, "<");
+           put(MapDirection.NORTH_WEST, "F");
         }};
+    }
+
+    public void eatPlant(Plant plant){
+        setEnergy(getEnergy() + plant.getEnergy());
+    }
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+    public int getEnergy() {
+        return energy;
     }
 
     public Animal(Vector2d position) {
