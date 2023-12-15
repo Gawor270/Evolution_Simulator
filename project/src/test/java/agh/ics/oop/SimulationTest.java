@@ -10,7 +10,7 @@ public class SimulationTest {
     public void testSimulation1() {
         List<MoveDirection> directions = OptionsParser.parse(new String[]{"f", "b", "r", "l", "f", "f", "r", "r"});
         List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
-        RectangularMap map = new RectangularMap(5, 5);
+        GlobeMap map = new GlobeMap(5, 5);
 
         Simulation simulation = new Simulation(positions, directions,map);
         simulation.run();
@@ -24,7 +24,7 @@ public class SimulationTest {
     public void testSimulation2() {
         List<MoveDirection> directions = OptionsParser.parse(new String[]{"b", "r", "f", "f", "l", "l", "r", "f", "l", "f", "b"});
         List<Vector2d> positions = List.of(new Vector2d(0, 0), new Vector2d(3, 4), new Vector2d(7,2));
-        RectangularMap map = new RectangularMap(9, 5);
+        GlobeMap map = new GlobeMap(9, 5);
 
         Simulation simulation = new Simulation(positions, directions,map);
         simulation.run();
@@ -39,7 +39,7 @@ public class SimulationTest {
     public void testInvalidInput1() {
         List<MoveDirection> directions = OptionsParser.parse(new String[]{"f", "r", "b", "l", "f", "f", "r", "r"});
         List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4), new Vector2d(-1,-1), new Vector2d(5,5));
-        RectangularMap map = new RectangularMap(5, 5);
+        GlobeMap map = new GlobeMap(5, 5);
 
         Simulation simulation = new Simulation(positions,directions,map);
         simulation.run();

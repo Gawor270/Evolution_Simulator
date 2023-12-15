@@ -15,13 +15,7 @@ public class Simulation implements Runnable{
         for(Vector2d position : positions) {
             Animal newAnimal = new Animal(position);
             animals.add(newAnimal);
-            try {
-                worldMap.place(newAnimal);
-            }
-            catch(PositionAlreadyOccupiedException e) {
-                animals.remove(animals.size() -1);
-                System.out.println("already occupied");
-            }
+            worldMap.place(newAnimal);
         }
 
         this.moves = moves;

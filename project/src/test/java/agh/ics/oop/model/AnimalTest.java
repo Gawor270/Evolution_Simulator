@@ -1,11 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.World;
-import agh.ics.oop.model.Animal;
-import agh.ics.oop.model.MapDirection;
 
-import agh.ics.oop.model.MoveDirection;
-import agh.ics.oop.model.Vector2d;
 import org.junit.jupiter.api.Test;
 
 import static agh.ics.oop.World.upperBound;
@@ -13,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AnimalTest {
 
-    WorldMap map = new RectangularMap(upperBound.getX(), upperBound.getY());
+    WorldMap map = new GlobeMap(upperBound.getX(), upperBound.getY());
     @Test
     public void testOrientationRight() {
         Animal animal = new Animal();
