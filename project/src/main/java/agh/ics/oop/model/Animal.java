@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,22 +11,31 @@ public class Animal implements WorldElement {
     private Vector2d position;
 
     private int energy;
-    private final Map<MapDirection, String> representation;
-    public Animal() {
-        this.position = new Vector2d(2,2);
-        this.orientation = MapDirection.NORTH;
-        representation = new HashMap<>(){{
-           put(MapDirection.NORTH, "^");
-           put(MapDirection.NORTH_EAST, "7");
-           put(MapDirection.EAST, ">");
-           put(MapDirection.SOUTH_EAST, "J");
-           put(MapDirection.SOUTH, "v");
-           put(MapDirection.SOUTH_WEST, "L");
-           put(MapDirection.WEST, "<");
-           put(MapDirection.NORTH_WEST, "F");
-        }};
+    private final List<Animal> parents;
+    public Statistics statistics;
+    private final Map<MapDirection, String> representation =
+        new HashMap<>(){{
+            put(MapDirection.NORTH_EAST, "6");
+            put(MapDirection.EAST, ">");
+            put(MapDirection.SOUTH_EAST, "J");
+            put(MapDirection.SOUTH, "v");
+            put(MapDirection.SOUTH_WEST, "L");
+            put(MapDirection.WEST, "<");
+            put(MapDirection.NORTH, "^");
+            put(MapDirection.NORTH_WEST, "F");
+    }};
+
+
+    public Animal(List<Animal> parents , Vector2d position, int energy) {
+        statistics = new Statistics(this);
+        this.parents = parents;
+        this.position = position;
+        this.energy = energy;
     }
 
+    public List<Animal> getParents() {
+        return parents;
+    }
     public void eatPlant(Plant plant){
         setEnergy(getEnergy() + plant.getEnergy());
     }
@@ -34,11 +44,6 @@ public class Animal implements WorldElement {
     }
     public int getEnergy() {
         return energy;
-    }
-
-    public Animal(Vector2d position) {
-        this();
-        this.position = position;
     }
 
     @Override
