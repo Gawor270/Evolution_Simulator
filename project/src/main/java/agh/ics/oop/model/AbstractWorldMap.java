@@ -5,7 +5,7 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
 
 abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
-    protected Map<Vector2d, Animal> animals = new HashMap<>();
+    protected Map<Vector2d, TreeSet<Animal>> animals = new HashMap<>();
     protected MapVisualizer mapVis = new MapVisualizer(this);
 
     private final UUID id = UUID.randomUUID();
@@ -38,22 +38,18 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
 
     @Override
     public void place(WorldElement element) {
-        animals.put(element.getPosition(),(Animal) element);
+        TreeSet<Animal> animalSet = animals.getOrDefault(element.getPosition(), new TreeSet<>());
+        animalSet.add((Animal) element);
+        animals.put(element.getPosition(), animalSet);
     }
 
     @Override
-    public void move(WorldElement element, MoveDirection direction) {
+    public void move(WorldElement element) {
         if(element instanceof Animal){
             animals.remove(element.getPosition());
-            ((Animal) element).move(direction,this);
+            ((Animal) element).move(this);
             String info = "animal at " + element.getPosition() + " moved";
-            try{
-                place(element);
-            }
-            catch (PositionAlreadyOccupiedException e) {
-                info = "animal at " + element.getPosition() + " couldn't move";
-                System.out.println("already occupied");
-            }
+            place(element);
             mapChanged(info);
         }
 
@@ -65,16 +61,6 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
     @Override
     public boolean isOccupied(Vector2d position) {
         return animals.containsKey(position);
-    }
-
-    @Override
-    public WorldElement objectAt(Vector2d position) {
-        return animals.get(position);
-    }
-
-    @Override
-    public Collection<WorldElement> getAnimals() {
-        return new ArrayList<>(animals.values());
     }
 
     @Override

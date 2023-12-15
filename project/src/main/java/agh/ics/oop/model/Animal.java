@@ -14,8 +14,8 @@ public class Animal implements WorldElement, Comparable<Animal>{
     public int childrenCounter;
     public int descendantsCounter;
     private int energy;
+    private int plantCounter;
     private final List<Animal> parents;
-    public Statistics statistics;
     private final Map<MapDirection, String> asciiRepresentation =
         new HashMap<>(){{
             put(MapDirection.NORTH_EAST, "6");
@@ -33,6 +33,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
         age = 0;
         childrenCounter = 0;
         descendantsCounter = 0;
+        plantCounter = 0;
         this.parents = parents;
         this.position = position;
         this.energy = energy;
@@ -45,6 +46,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
     }
     public void eatPlant(Plant plant){
         setEnergy(getEnergy() + plant.getEnergy());
+        plantCounter++;
     }
 
     public boolean isAt(Vector2d position) {
@@ -53,7 +55,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
 
     public void move(MoveValidator validator) {
         Vector2d newPos =  new Vector2d(position.getX(), position.getY());
-//        Instead of one there will be value of curren gen
+//        Instead of one there will be value of current gen
         newPos = newPos.add(orientation.moveBy(1).toUnitVector());
 
         if(validator.canMoveTo(newPos)){
@@ -85,6 +87,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
     public MapDirection getOrientation() { return orientation; }
     public List<Animal> getParents() { return parents; }
     public int getEnergy() { return energy; }
+    public int getPlantCounter() { return plantCounter; }
     public int getAge() { return age; }
     public void setEnergy(int energy) { this.energy = energy; }
 
@@ -95,8 +98,6 @@ public class Animal implements WorldElement, Comparable<Animal>{
         Animal animal = (Animal) o;
         return orientation == animal.orientation && Objects.equals(position, animal.position);
     }
-
-    public boolean greater
 
     @Override
     public String toString() {

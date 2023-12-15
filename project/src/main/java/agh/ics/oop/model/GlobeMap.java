@@ -1,15 +1,20 @@
 package agh.ics.oop.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GlobeMap extends AbstractWorldMap {
 
     private final Boundary globeBounds;
-    public GlobeMap(int width, int height) {
+
+    private Map<Vector2d, Plant> plants = new HashMap();
+    public GlobeMap(int width, int height, int startPlants, int plantEnergy, int dailyPlants) {
         globeBounds = new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.follows(lowerBound) && position.precedes(upperBound) && super.canMoveTo(position);
+        return position.getX() >= 0 && position.getX() < globeBounds.upperBound().getX();
     }
 
 
