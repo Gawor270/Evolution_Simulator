@@ -1,35 +1,20 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.Simulation;
+
 import java.util.List;
 
 public class Statistics {
-    public int childrenCounter;
 
-    public int descendantsCounter;
+    private Simulation simulation;
+    public Statistics(Simulation simulation) {
+        this.simulation = simulation;
 
-    private final Animal animal;
-    public Statistics(Animal animal) {
-        this.animal = animal;
     }
 
-    public void updateStatistics() {
-        List<Animal> parents = animal.getParents();
-        if (parents != null) {
-            for (Animal parent : animal.getParents()) {
-                parent.statistics.childrenCounter++;
-            }
-        }
-        updateDescendantsCounter();
-    }
 
-    private void updateDescendantsCounter() {
-        if(animal.getParents() != null) {
-            for (Animal parent : animal.getParents()) {
-                parent.statistics.descendantsCounter++;
-                parent.statistics.updateDescendantsCounter();
-            }
-        }
-    }
+
+
 
 
 }

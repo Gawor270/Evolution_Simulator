@@ -2,11 +2,9 @@ package agh.ics.oop.model;
 
 public class GlobeMap extends AbstractWorldMap {
 
-    private final Vector2d lowerBound;
-    private final Vector2d upperBound;
+    private final Boundary globeBounds;
     public GlobeMap(int width, int height) {
-        lowerBound = new Vector2d(0,0);
-        upperBound = new Vector2d(width-1, height-1);
+        globeBounds = new Boundary(new Vector2d(0,0), new Vector2d(width, height));
     }
 
     @Override
@@ -14,9 +12,10 @@ public class GlobeMap extends AbstractWorldMap {
         return position.follows(lowerBound) && position.precedes(upperBound) && super.canMoveTo(position);
     }
 
+
     @Override
     public Boundary getCurrentBounds() {
-        return new Boundary(lowerBound, upperBound);
+        return super.getCurrentBounds();
     }
 
     @Override

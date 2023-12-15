@@ -37,13 +37,8 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
     }
 
     @Override
-    public void place(WorldElement element) throws PositionAlreadyOccupiedException {
-        if(canMoveTo(element.getPosition())){
-            animals.put(element.getPosition(),(Animal) element);
-        }
-        else {
-            throw new PositionAlreadyOccupiedException( element.getPosition() );
-        }
+    public void place(WorldElement element) {
+        animals.put(element.getPosition(),(Animal) element);
     }
 
     @Override

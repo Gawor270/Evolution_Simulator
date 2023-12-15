@@ -23,15 +23,9 @@ public enum MapDirection {
         };
     }
 
-    public MapDirection previous() {
+    public MapDirection moveBy(int n) {
         int totalDirections = MapDirection.values().length;
-        int previousOrdinal = (this.ordinal() + totalDirections - 1) % totalDirections;
-        return MapDirection.values()[previousOrdinal];
-    }
-
-    public MapDirection next() {
-        int totalDirections = MapDirection.values().length;
-        int nextOrdinal = (this.ordinal() + totalDirections + 1) % totalDirections;
+        int nextOrdinal = (this.ordinal() + n) % totalDirections;
         return MapDirection.values()[nextOrdinal];
     }
 
