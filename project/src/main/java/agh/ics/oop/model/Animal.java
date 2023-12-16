@@ -7,14 +7,10 @@ import java.util.Objects;
 
 
 public class Animal implements WorldElement, Comparable<Animal>{
-    private final MapDirection orientation;
+    private MapDirection orientation;
     private Vector2d position;
-
-    private int age;
-    public int childrenCounter;
-    public int descendantsCounter;
     private int energy;
-    private int plantCounter;
+    private AnimalStatistics statistics;
     private final List<Animal> parents;
     private final Map<MapDirection, String> asciiRepresentation =
         new HashMap<>(){{
@@ -30,23 +26,17 @@ public class Animal implements WorldElement, Comparable<Animal>{
 
 
     public Animal(List<Animal> parents , Vector2d position, int energy) {
-        age = 0;
-        childrenCounter = 0;
-        descendantsCounter = 0;
-        plantCounter = 0;
+        this.statistics = new AnimalStatistics(this);
         this.parents = parents;
         this.position = position;
         this.energy = energy;
         this.orientation = MapDirection.NORTH;
-        updateParents();
+        statistics.updateStatistics();
     }
 
-    public void getOlder(){
-        age++;
-    }
     public void eatPlant(Plant plant){
         setEnergy(getEnergy() + plant.getEnergy());
-        plantCounter++;
+        statistics.increasePlantCounter();
     }
 
     public boolean isAt(Vector2d position) {
@@ -64,32 +54,16 @@ public class Animal implements WorldElement, Comparable<Animal>{
 
     }
 
-    public void updateParents() {
-        if (parents != null) {
-            for (Animal parent : parents) {
-                parent.childrenCounter++;
-            }
-        }
-        updateDescendantsCounter(this);
-    }
-    private void updateDescendantsCounter(Animal animal) {
-        if(animal.getParents() != null) {
-            for (Animal parent : animal.getParents()) {
-                parent.descendantsCounter++;
-                parent.updateDescendantsCounter(parent);
-            }
-        }
-    }
-
     public Vector2d getPosition() {
         return position;
     }
     public MapDirection getOrientation() { return orientation; }
     public List<Animal> getParents() { return parents; }
     public int getEnergy() { return energy; }
-    public int getPlantCounter() { return plantCounter; }
-    public int getAge() { return age; }
     public void setEnergy(int energy) { this.energy = energy; }
+    public AnimalStatistics getStatistics() {
+        return statistics;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -111,13 +85,13 @@ public class Animal implements WorldElement, Comparable<Animal>{
     @Override
     public int compareTo(Animal o) {
         if(this.energy == o.getEnergy()){
-            if(this.age == o.getAge()){
-                if(this.childrenCounter == o.childrenCounter){
+            if(statistics.getAge() == o.statistics.getAge()){
+                if(statistics.getChildrenCounter() == o.statistics.getChildrenCounter()){
                     return (int) Math.pow(-1, (int) (Math.random() * 2));
                 }
-                return Integer.compare(o.childrenCounter,this.childrenCounter);
+                return Integer.compare(o.statistics.getChildrenCounter(), statistics.getChildrenCounter());
             }
-            return Integer.compare(o.getAge(),this.age);
+            return Integer.compare(o.statistics.getAge(), statistics.getAge());
         }
         return Integer.compare(o.getEnergy(),this.energy);
     }
