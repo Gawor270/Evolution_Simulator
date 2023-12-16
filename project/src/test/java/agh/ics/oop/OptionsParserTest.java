@@ -2,8 +2,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import agh.ics.oop.OptionsParser;
-
 import java.util.List;
 
 

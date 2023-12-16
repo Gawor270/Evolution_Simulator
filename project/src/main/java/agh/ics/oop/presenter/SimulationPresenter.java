@@ -1,6 +1,5 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
@@ -98,7 +97,6 @@ public class SimulationPresenter implements MapChangeListener {
         String userInput = moveListTextField.getText();
         String[] moves = userInput.split(" ");
         System.out.println(userInput);
-        List<MoveDirection> directions = OptionsParser.parse(moves);
 
         List<Vector2d> positions = List.of(new Vector2d(-1, -1), new Vector2d(7, 7));
 

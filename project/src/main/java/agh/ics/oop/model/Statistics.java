@@ -12,9 +12,9 @@ public class Statistics {
     private int plantsCount;
     private int freeSpaceCount;
 //    List<Genome> mostCommonGenomes;
-    private int avgEnergy;
-    private int avgLifespan;
-    private int avgChildrenCount;
+    private float avgEnergy;
+    private float avgLifespan;
+    private float avgChildrenCount;
 
     public Statistics(Simulation simulation) {
         this.simulation = simulation;
