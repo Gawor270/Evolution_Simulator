@@ -2,9 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
 
-import java.util.List;
-
-public class Statistics {
+public class SimulationStatistics {
 
     private Simulation simulation;
 
@@ -16,7 +14,7 @@ public class Statistics {
     private float avgLifespan;
     private float avgChildrenCount;
 
-    public Statistics(Simulation simulation) {
+    public SimulationStatistics(Simulation simulation) {
         this.simulation = simulation;
     }
 

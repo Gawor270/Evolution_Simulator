@@ -11,9 +11,8 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
 
     private List<Vector2d> positions;
 
-    public RandomPositionGenerator(int maxWidth, int maxHeight, int grassCount) {
-        grassCount = Math.max(0,grassCount);
-        positions = new ArrayList<>(10 * grassCount);
+    public RandomPositionGenerator(int maxWidth, int maxHeight, int count) {
+        positions = new ArrayList<>(count);
         for (int i = 0; i <= maxWidth; i++) {
             for (int j = 0; j <= maxHeight; j++) {
                 positions.add(new Vector2d(i, j));
@@ -21,7 +20,7 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
         }
 
         Collections.shuffle(positions);
-        positions = positions.subList(0,grassCount);
+        positions = positions.subList(0,count);
     }
 
     @Override
