@@ -119,6 +119,6 @@ public class Animal implements WorldElement, Comparable<Animal>{
             }
             return Integer.compare(o.getAge(),this.age);
         }
-        return Integer.compare(o.getEnergy(),this.energy)
+        return Integer.compare(o.getEnergy(),this.energy);
     }
 }

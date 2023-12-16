@@ -14,7 +14,7 @@ public class GlobeMap extends AbstractWorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.getX() >= 0 && position.getX() < globeBounds.upperBound().getX();
+        return position.getY() >= 0 && position.getY() < globeBounds.upperBound().getY();
     }
 
 
