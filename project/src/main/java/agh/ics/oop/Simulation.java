@@ -8,13 +8,14 @@ public class Simulation implements Runnable{
 
     private final List<Animal> animals;
 
-    private Statistics statistics;
+    private SimulationStatistics statistics;
     private final WorldMap<WorldElement, Vector2d> worldMap;
 
     private SimulationSettings settings;
     public Simulation(int mapHeight, int mapWidth, int startPlants,int startAnimals, int animalStartEnergy, SimulationSettings settings){
-        statistics = new Statistics(this);
+        statistics = new SimulationStatistics(this);
         worldMap = new GlobeMap(mapWidth, mapHeight, startPlants, startAnimals, animalStartEnergy);
+        animals = new ArrayList<>();
         this.settings = settings;
     }
 

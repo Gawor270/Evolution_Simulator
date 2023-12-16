@@ -10,7 +10,6 @@ import java.util.Random;
 public class World {
 
     public static void main(String[] args){
-
-        Application.launch(SimulationApp.class, args);
+        System.out.println("Start");
     }
 }
