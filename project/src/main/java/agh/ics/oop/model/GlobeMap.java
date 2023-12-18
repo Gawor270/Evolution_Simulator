@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,13 +15,29 @@ public class GlobeMap extends AbstractWorldMap {
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.getX() >= 0 && position.getX() < globeBounds.upperBound().getX();
+        return position.getY() >= 0 && position.getY() < globeBounds.upperBound().getY();
     }
 
 
     @Override
     public Boundary getCurrentBounds() {
         return super.getCurrentBounds();
+    }
+
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        if(animals.containsKey(position)){
+            return animals.get(position).first();
+        }
+        if(plants.containsKey(position)){
+            return plants.get(position);
+        }
+        return null;
+    }
+
+    @Override
+    public Collection<WorldElement> getAnimals() {
+        return null;
     }
 
     @Override

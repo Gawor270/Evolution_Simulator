@@ -6,15 +6,17 @@ import java.util.List;
 
 public class Simulation implements Runnable{
 
-    private final List<MoveDirection>  moves;
     private final List<Animal> animals;
 
-    private Statistics statistics;
+    private SimulationStatistics statistics;
     private final WorldMap<WorldElement, Vector2d> worldMap;
-    public Simulation(int mapHeight, int mapWidth, int startPlants, int plantEnergy,
-                      int dailyPlants, int startAnimals, int animalStartEnergy,
-                      int fullEnergy, int breedingEnergy, int minMutations, int maxMutations, int genomeLength){
-        statistics = new Statistics(this);
+
+    private SimulationSettings settings;
+    public Simulation(int mapHeight, int mapWidth, int startPlants,int startAnimals, int animalStartEnergy, SimulationSettings settings){
+        statistics = new SimulationStatistics(this);
+        worldMap = new GlobeMap(mapWidth, mapHeight, startPlants, startAnimals, animalStartEnergy);
+        animals = new ArrayList<>();
+        this.settings = settings;
     }
 
     public void run() {

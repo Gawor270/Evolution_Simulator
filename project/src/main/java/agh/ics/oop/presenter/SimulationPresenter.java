@@ -1,6 +1,5 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
@@ -18,7 +17,7 @@ import java.util.List;
 
 
 public class SimulationPresenter implements MapChangeListener {
-    private GrassField map;
+    private WorldMap map;
 
     @FXML
     private Label infoLabel;
@@ -29,7 +28,7 @@ public class SimulationPresenter implements MapChangeListener {
 
     private final int WINDOW_SIZE = 400;
 
-    public void setWorldMap(GrassField map) {this.map = map;}
+    public void setWorldMap(WorldMap map) {this.map = map;}
     public void drawMap(WorldMap worldMap) {
         clearGrid();
         Boundary bounds = worldMap.getCurrentBounds();
@@ -90,22 +89,11 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void onSimulationStartClicked(ActionEvent actionEvent) {
 
-        map = new GrassField(4);
-        setWorldMap(map);
-        map.registerObserver(this);
-        map.registerObserver(new ConsoleMapDisplay());
-
         String userInput = moveListTextField.getText();
         String[] moves = userInput.split(" ");
         System.out.println(userInput);
-        List<MoveDirection> directions = OptionsParser.parse(moves);
 
         List<Vector2d> positions = List.of(new Vector2d(-1, -1), new Vector2d(7, 7));
-
-
-        Simulation simulation = new Simulation(positions, directions, map);
-        Thread thread = new Thread(simulation);
-        thread.start();
 
     }
 }
