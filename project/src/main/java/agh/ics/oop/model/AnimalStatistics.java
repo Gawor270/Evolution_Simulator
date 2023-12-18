@@ -45,6 +45,8 @@ public class AnimalStatistics {
         return childrenCounter;
     }
 
+    public int getDescendantsCounter(){ return descendantsCounter; }
+
     public void increasePlantCounter(){
         plantCounter++;
     }
