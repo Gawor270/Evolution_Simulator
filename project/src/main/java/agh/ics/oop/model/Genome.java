@@ -26,6 +26,8 @@ public class Genome {
         return genome;
     }
 
+    public int getCurrentIndex() { return currentIndex; }
+
 
     public void mutate(int a){
         Random random = new Random();
