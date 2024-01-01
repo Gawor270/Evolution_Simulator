@@ -10,6 +10,8 @@ public class Animal implements WorldElement, Comparable<Animal>{
     private MapDirection orientation;
     private Vector2d position;
     private int energy;
+
+    private Genome genome;
     private AnimalStatistics statistics;
     private final List<Animal> parents;
     private final Map<MapDirection, String> asciiRepresentation =
@@ -26,6 +28,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
 
 
     public Animal(List<Animal> parents , Vector2d position, int energy) {
+        this.genome = new Genome(24); // to change
         this.statistics = new AnimalStatistics(this);
         this.parents = parents;
         this.position = position;
@@ -34,8 +37,18 @@ public class Animal implements WorldElement, Comparable<Animal>{
         statistics.updateStatistics();
     }
 
-    public void eatPlant(Plant plant){
-        setEnergy(getEnergy() + plant.getEnergy());
+    public Animal(List<Animal> parents , Vector2d position, int energy, Genome genome) {
+        this.genome = genome;
+        this.statistics = new AnimalStatistics(this);
+        this.parents = parents;
+        this.position = position;
+        this.energy = energy;
+        this.orientation = MapDirection.NORTH;
+        statistics.updateStatistics();
+    }
+
+    public void eatPlant(int plantEnergy){
+        energy += plantEnergy;
         statistics.increasePlantCounter();
     }
 
@@ -46,7 +59,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
     public void move(MoveValidator validator) {
         Vector2d newPos =  new Vector2d(position.getX(), position.getY());
 //        Instead of one there will be value of current gen
-        newPos = newPos.add(orientation.moveBy(1).toUnitVector());
+        newPos = newPos.add(orientation.moveBy(genome.nextGen()).toUnitVector());
 
         if(validator.canMoveTo(newPos)){
             position = newPos;

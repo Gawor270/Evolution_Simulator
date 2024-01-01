@@ -14,7 +14,7 @@ public class Simulation implements Runnable{
     private SimulationSettings settings;
     public Simulation(int mapHeight, int mapWidth, int startPlants,int startAnimals, int animalStartEnergy, SimulationSettings settings){
         statistics = new SimulationStatistics(this);
-        worldMap = new GlobeMap(mapWidth, mapHeight, startPlants, startAnimals, animalStartEnergy);
+        worldMap = new GlobeMap(mapWidth, mapHeight, startPlants);
         animals = new ArrayList<>();
         this.settings = settings;
     }

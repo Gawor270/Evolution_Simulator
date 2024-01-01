@@ -49,6 +49,10 @@ public class Genome {
         return new Genome(this.length, childGenome);
     }
 
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
     public int nextGen(){
         Random random = new Random();
         int a = random.nextInt(5);

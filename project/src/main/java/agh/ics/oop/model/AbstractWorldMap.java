@@ -43,10 +43,14 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
         animals.put(element.getPosition(), animalSet);
     }
 
+    public void remove(WorldElement element){
+        animals.get(element.getPosition()).remove(element);
+    }
+
     @Override
     public void move(WorldElement element) {
         if(element instanceof Animal){
-            animals.remove(element.getPosition());
+            remove(element);
             ((Animal) element).move(this);
             String info = "animal at " + element.getPosition() + " moved";
             place(element);
