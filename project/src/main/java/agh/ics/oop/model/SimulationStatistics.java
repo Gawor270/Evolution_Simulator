@@ -20,6 +20,30 @@ public class SimulationStatistics {
         this.simulation = simulation;
     }
 
+    public void increaseAnimalsCount(){
+        animalsCount++;
+    }
+
+    public void decreaseAnimalsCount(){
+        animalsCount--;
+    }
+
+    public void increasePlantsCount(){
+        plantsCount++;
+    }
+
+    public void decreasePlantsCount(){
+        plantsCount--;
+    }
+
+    public int getAnimalsCount() {
+        return animalsCount;
+    }
+
+
+
+
+
 
 
 

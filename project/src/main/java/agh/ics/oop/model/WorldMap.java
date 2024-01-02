@@ -19,6 +19,8 @@ public interface WorldMap<WorldElement, P> extends MoveValidator<P> {
      * @return True if the animal was placed. The animal cannot be placed if the move is not valid.
      */
     void place(WorldElement animal);
+
+    void remove(WorldElement animal);
     /**
      * Moves an animal (if it is present on the map) according to specified direction.
      * If the move is not possible, this method has no effect.
@@ -44,7 +46,6 @@ public interface WorldMap<WorldElement, P> extends MoveValidator<P> {
      */
     WorldElement objectAt(P position);
 
-    Collection<WorldElement> getAnimals();
 
     UUID getId();
 }
