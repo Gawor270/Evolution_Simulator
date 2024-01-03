@@ -11,5 +11,8 @@ public interface MoveValidator<T> {
      *            The position checked for the movement possibility.
      * @return True if the object can move to that position.
      */
+
     boolean canMoveTo(T position);
+
+    int getWidth();
 }

@@ -43,12 +43,23 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
         animals.put(element.getPosition(), animalSet);
     }
 
+
+
+    public void remove(WorldElement element){
+        if(element instanceof Animal){
+            animals.get(element.getPosition()).remove(((Animal)element));
+            if(animals.get(element.getPosition()).isEmpty())
+                animals.remove(element.getPosition());
+        }
+    }
+
     @Override
     public void move(WorldElement element) {
         if(element instanceof Animal){
-            animals.remove(element.getPosition());
+            Vector2d startpos = element.getPosition();
+            remove(element);
             ((Animal) element).move(this);
-            String info = "animal at " + element.getPosition() + " moved";
+            String info = "animal moved from" + startpos.toString() + "to" + element.getPosition().toString();
             place(element);
             mapChanged(info);
         }
@@ -60,7 +71,14 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
     }
     @Override
     public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);
+        return animals.containsKey(position) && !animals.get(position).isEmpty();
+    }
+
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        if(animals.containsKey(position) && !animals.get(position).isEmpty())
+            return animals.get(position).first();
+        return null;
     }
 
     @Override

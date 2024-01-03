@@ -10,11 +10,13 @@ public class Animal implements WorldElement, Comparable<Animal>{
     private MapDirection orientation;
     private Vector2d position;
     private int energy;
+
+    private Genome genome;
     private AnimalStatistics statistics;
     private final List<Animal> parents;
     private final Map<MapDirection, String> asciiRepresentation =
         new HashMap<>(){{
-            put(MapDirection.NORTH_EAST, "6");
+            put(MapDirection.NORTH_EAST, "7");
             put(MapDirection.EAST, ">");
             put(MapDirection.SOUTH_EAST, "J");
             put(MapDirection.SOUTH, "v");
@@ -25,7 +27,8 @@ public class Animal implements WorldElement, Comparable<Animal>{
     }};
 
 
-    public Animal(List<Animal> parents , Vector2d position, int energy) {
+    public Animal(List<Animal> parents , Vector2d position, int energy, int genomeSize) {
+        this.genome = new Genome(genomeSize);
         this.statistics = new AnimalStatistics(this);
         this.parents = parents;
         this.position = position;
@@ -34,8 +37,18 @@ public class Animal implements WorldElement, Comparable<Animal>{
         statistics.updateStatistics();
     }
 
-    public void eatPlant(Plant plant){
-        setEnergy(getEnergy() + plant.getEnergy());
+    public Animal(List<Animal> parents , Vector2d position, int energy, Genome genome) {
+        this.genome = genome;
+        this.statistics = new AnimalStatistics(this);
+        this.parents = parents;
+        this.position = position;
+        this.energy = energy;
+        this.orientation = MapDirection.NORTH;
+        statistics.updateStatistics();
+    }
+
+    public void eatPlant(int plantEnergy){
+        energy += plantEnergy;
         statistics.increasePlantCounter();
     }
 
@@ -46,12 +59,25 @@ public class Animal implements WorldElement, Comparable<Animal>{
     public void move(MoveValidator validator) {
         Vector2d newPos =  new Vector2d(position.getX(), position.getY());
 //        Instead of one there will be value of current gen
-        newPos = newPos.add(orientation.moveBy(1).toUnitVector());
+        orientation = orientation.moveBy(genome.nextGen());
+        newPos = newPos.add(orientation.toUnitVector());
 
         if(validator.canMoveTo(newPos)){
-            position = newPos;
+            position = new Vector2d((newPos.getX() + validator.getWidth())% validator.getWidth(), newPos.getY());
+        }
+        else{
+            orientation = orientation.moveBy(4);
         }
 
+    }
+
+    public Animal reproduce(Animal other, int breedEnergy, int minMutations, int maxMutations){
+        int childEnergy = 2*breedEnergy;
+        energy -= breedEnergy;
+        other.energy -= breedEnergy;
+        return new Animal(List.of(this, other), position, childEnergy,
+                genome.cross(other.getGenome(), energy + breedEnergy,
+                        other.getEnergy() + breedEnergy, minMutations, maxMutations));
     }
 
     public Vector2d getPosition() {
@@ -60,18 +86,20 @@ public class Animal implements WorldElement, Comparable<Animal>{
     public MapDirection getOrientation() { return orientation; }
     public List<Animal> getParents() { return parents; }
     public int getEnergy() { return energy; }
+
+    public void decreseEnergy(){
+        energy--;
+    }
+
+    public Genome getGenome() {
+        return genome;
+    }
+
     public void setEnergy(int energy) { this.energy = energy; }
     public AnimalStatistics getStatistics() {
         return statistics;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Animal animal = (Animal) o;
-        return orientation == animal.orientation && Objects.equals(position, animal.position);
-    }
 
     @Override
     public String toString() {
@@ -87,6 +115,9 @@ public class Animal implements WorldElement, Comparable<Animal>{
         if(this.energy == o.getEnergy()){
             if(statistics.getAge() == o.statistics.getAge()){
                 if(statistics.getChildrenCounter() == o.statistics.getChildrenCounter()){
+                    if(this == o){
+                        return 0;
+                    }
                     return (int) Math.pow(-1, (int) (Math.random() * 2));
                 }
                 return Integer.compare(o.statistics.getChildrenCounter(), statistics.getChildrenCounter());
