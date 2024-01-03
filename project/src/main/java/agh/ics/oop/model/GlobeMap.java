@@ -1,7 +1,8 @@
 package agh.ics.oop.model;
 
 
-import java.util.Collection;
+import agh.ics.oop.model.util.RandomFreePositionGenerator;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
@@ -10,9 +11,23 @@ public class GlobeMap extends AbstractWorldMap {
 
     private final Boundary globeBounds;
 
+    private RandomFreePositionGenerator positionGenerator;
+
     private Map<Vector2d, Plant> plants = new HashMap();
-    public GlobeMap(int width, int height) {
+    public GlobeMap(int width, int height, int startPlants) {
         globeBounds = new Boundary(new Vector2d(0,0), new Vector2d(width, height));
+        positionGenerator = new RandomFreePositionGenerator(width, height);
+        spawnPlants(startPlants);
+    }
+    public void spawnPlants(int plantsCount){
+        for(int i = 0; i < plantsCount; i++){
+            Vector2d position = positionGenerator.getPosition();
+            if(position == null){
+                break;
+            }
+            Plant plant = new Plant(position);
+            place(plant);
+        }
     }
 
     @Override
@@ -32,6 +47,7 @@ public class GlobeMap extends AbstractWorldMap {
     public void remove(WorldElement element){
         if(element instanceof Plant) {
             plants.remove(element.getPosition());
+            positionGenerator.addPosition(element.getPosition());
             notifyObservers(this, "Plant eaten at" + element.getPosition());
         }
         else

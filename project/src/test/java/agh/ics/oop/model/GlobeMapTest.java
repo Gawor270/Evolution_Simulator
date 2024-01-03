@@ -8,7 +8,7 @@ public class GlobeMapTest {
 
     @Test
     public void testPlace() {
-        GlobeMap map = new GlobeMap(10, 10);
+        GlobeMap map = new GlobeMap(10, 10,0);
         Vector2d position = new Vector2d(5, 5);
         Animal animal1 = new Animal(null, position, 0, 3);
         map.place(animal1);
@@ -23,7 +23,7 @@ public class GlobeMapTest {
 
     @Test
     public void testRemove() {
-        GlobeMap map = new GlobeMap(10, 10);
+        GlobeMap map = new GlobeMap(10, 10, 0);
         Vector2d position = new Vector2d(5, 5);
         Animal animal1 = new Animal(null, position, 0, 3);
         map.place(animal1);
@@ -34,7 +34,7 @@ public class GlobeMapTest {
 
     @Test
     public void testCanMoveTo(){
-        GlobeMap map = new GlobeMap(10, 10);
+        GlobeMap map = new GlobeMap(10, 10, 0);
         Vector2d position = new Vector2d(5, 5);
         assertTrue(map.canMoveTo(position));
         position = new Vector2d(5, 11);
@@ -47,7 +47,7 @@ public class GlobeMapTest {
 
     @Test
     public void testObjectAt(){
-        GlobeMap map = new GlobeMap(10, 10);
+        GlobeMap map = new GlobeMap(10, 10, 0);
         Vector2d position = new Vector2d(5, 5);
         Animal animal1 = new Animal(null, position, 5, 3);
         map.place(animal1);

@@ -33,7 +33,7 @@ public class GenomeTest {
         int energyA = 50;
         int energyB = 30;
 
-        Genome childGenom = parentA.cross(parentB, energyA, energyB);
+        Genome childGenom = parentA.cross(parentB, energyA, energyB, 1, 10);
         // Check if the child's genome has the correct size
         assertEquals(8, childGenom.getGenome().size());
     }

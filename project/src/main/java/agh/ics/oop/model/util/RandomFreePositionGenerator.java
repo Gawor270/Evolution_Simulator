@@ -15,6 +15,7 @@ public class RandomFreePositionGenerator {
                 positions.add(new Vector2d(i, j));
             }
         }
+        Collections.shuffle(positions);
     }
 
     public void addPosition(Vector2d position){

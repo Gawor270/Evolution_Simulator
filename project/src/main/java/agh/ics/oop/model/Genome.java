@@ -32,7 +32,7 @@ public class Genome {
     }
 
 
-    public Genome cross( Genome parentB, int energyA, int energyB){
+    public Genome cross( Genome parentB, int energyA, int energyB, int minMutations, int maxMutations){
         ArrayList<Integer> childGenome = new ArrayList<>();
         int gensFromParentA = (energyA / (energyA + energyB)) * genome.size();
         int gensFromParentB = genome.size() - gensFromParentA;
@@ -43,8 +43,13 @@ public class Genome {
         for (int i=genome.size() - gensFromParentB; i<genome.size(); i++){
             childGenome.add(parentB.getGenome().get(i));
         }
-        Collections.shuffle(childGenome);
-        return new Genome(childGenome);
+        Genome result = new Genome(childGenome);
+        Random random = new Random();
+        int mutations = random.nextInt(maxMutations - minMutations) + minMutations;
+        for (int i=0; i<mutations; i++){
+            result.mutate(random.nextInt(genome.size()));
+        }
+        return result;
     }
 
     public int getCurrentIndex() {
@@ -52,15 +57,8 @@ public class Genome {
     }
 
     public int nextGen(){
-        Random random = new Random();
-        int a = random.nextInt(5);
-
-        if (a == 0){
-            this.currentIndex = (this.currentIndex + random.nextInt(7)) % genome.size();
-        }else{
-            this.currentIndex = (this.currentIndex + 1) % genome.size();
-        }
-        return this.genome.get(this.currentIndex);
+        currentIndex = (currentIndex + 1) % this.genome.size();
+        return this.genome.get((currentIndex - 1 + this.genome.size()) % this.genome.size());
     }
 
     @Override

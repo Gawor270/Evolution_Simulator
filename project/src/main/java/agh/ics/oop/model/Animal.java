@@ -65,14 +65,19 @@ public class Animal implements WorldElement, Comparable<Animal>{
         if(validator.canMoveTo(newPos)){
             position = new Vector2d((newPos.getX() + validator.getWidth())% validator.getWidth(), newPos.getY());
         }
+        else{
+            orientation = orientation.moveBy(4);
+        }
 
     }
 
-    public Animal reproduce(Animal other, int breedEnergy){
+    public Animal reproduce(Animal other, int breedEnergy, int minMutations, int maxMutations){
         int childEnergy = 2*breedEnergy;
         energy -= breedEnergy;
         other.energy -= breedEnergy;
-        return new Animal(List.of(this, other), position, childEnergy, genome.cross(other.getGenome(), energy + breedEnergy, other.getEnergy() + breedEnergy));
+        return new Animal(List.of(this, other), position, childEnergy,
+                genome.cross(other.getGenome(), energy + breedEnergy,
+                        other.getEnergy() + breedEnergy, minMutations, maxMutations));
     }
 
     public Vector2d getPosition() {
