@@ -11,7 +11,7 @@ public class World {
 
     public static void main(String[] args){
         System.out.println("Start");
-        SimulationSettings settings = new SimulationSettings(1, 20, 10, 10, 1, 10, 5, 1, 5, 10);
+        SimulationSettings settings = new SimulationSettings(3, 20, 10, 10, 10, 10, 1, 1, 5, 10);
         Simulation simulation = new Simulation(10,10,settings);
         simulation.run();
     }

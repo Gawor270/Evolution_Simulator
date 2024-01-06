@@ -1,5 +1,6 @@
 package agh.ics.oop.model.util;
 
+import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 
 import java.util.*;
@@ -7,30 +8,42 @@ import java.util.*;
 public class RandomFreePositionGenerator {
 
     private List<Vector2d> positions;
+    private List<Vector2d> preferredPositions;
 
-    public RandomFreePositionGenerator(int maxWidth, int maxHeight) {
+    private int probability;
+
+    public RandomFreePositionGenerator(int probability) {
         positions = new ArrayList<>();
-        for (int i = 0; i <= maxWidth; i++) {
-            for (int j = 0; j <= maxHeight; j++) {
-                positions.add(new Vector2d(i, j));
-            }
-        }
-        Collections.shuffle(positions);
+        preferredPositions = new ArrayList<>();
+        this.probability = probability;
     }
 
     public void addPosition(Vector2d position){
         positions.add(position);
-        Collections.shuffle(positions);
+        int radomind = new Random().nextInt(positions.size());
+        Collections.swap(positions, positions.size() - 1, radomind);
     }
 
-    public Vector2d getPosition(){
-        if(positions.isEmpty()){
-            return null;
+    public void addPreferredPosition(Vector2d position){
+        preferredPositions.add(position);
+        int radomind = new Random().nextInt(preferredPositions.size());
+        Collections.swap(preferredPositions, preferredPositions.size() - 1, radomind);
+    }
+
+    public Optional<Vector2d> getPosition(){
+        Random random = new Random();
+        int randomIndex = random.nextInt(100);
+        if(randomIndex < probability){
+            if(preferredPositions.isEmpty())
+                return Optional.empty();
+            else
+                return Optional.of(preferredPositions.remove(preferredPositions.size() - 1));
         }
         else{
-            Vector2d result = positions.remove(positions.size() - 1);
-            Collections.shuffle(positions);
-            return result;
+            if(positions.isEmpty())
+                return Optional.empty();
+            else
+                return Optional.of(positions.remove(positions.size() - 1));
         }
     }
 

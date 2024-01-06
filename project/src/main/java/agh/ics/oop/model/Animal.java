@@ -1,19 +1,20 @@
 package agh.ics.oop.model;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import agh.ics.oop.model.variantsInterfaces.AnimalMoveVariant;
+import agh.ics.oop.model.variantsInterfaces.MapVariant;
+
+import java.util.*;
 
 
 public class Animal implements WorldElement, Comparable<Animal>{
     private MapDirection orientation;
     private Vector2d position;
     private int energy;
-
     private Genome genome;
     private AnimalStatistics statistics;
     private final List<Animal> parents;
+
+    AnimalMoveVariant moveVariant;
     private final Map<MapDirection, String> asciiRepresentation =
         new HashMap<>(){{
             put(MapDirection.NORTH_EAST, "7");
@@ -27,19 +28,21 @@ public class Animal implements WorldElement, Comparable<Animal>{
     }};
 
 
-    public Animal(List<Animal> parents , Vector2d position, int energy, int genomeSize) {
+    public Animal(List<Animal> parents , Vector2d position, int energy, int genomeSize, AnimalMoveVariant moveVariant) {
         this.genome = new Genome(genomeSize);
         this.statistics = new AnimalStatistics(this);
         this.parents = parents;
         this.position = position;
         this.energy = energy;
         this.orientation = MapDirection.NORTH;
+        this.moveVariant = moveVariant;
         statistics.updateStatistics();
     }
 
-    public Animal(List<Animal> parents , Vector2d position, int energy, Genome genome) {
+    public Animal(List<Animal> parents , Vector2d position, int energy, Genome genome, AnimalMoveVariant moveVariant) {
         this.genome = genome;
         this.statistics = new AnimalStatistics(this);
+        this.moveVariant = moveVariant;
         this.parents = parents;
         this.position = position;
         this.energy = energy;
@@ -56,19 +59,8 @@ public class Animal implements WorldElement, Comparable<Animal>{
         return this.position.equals((position));
     }
 
-    public void move(MoveValidator validator) {
-        Vector2d newPos =  new Vector2d(position.getX(), position.getY());
-//        Instead of one there will be value of current gen
-        orientation = orientation.moveBy(genome.nextGen());
-        newPos = newPos.add(orientation.toUnitVector());
-
-        if(validator.canMoveTo(newPos)){
-            position = new Vector2d((newPos.getX() + validator.getWidth())% validator.getWidth(), newPos.getY());
-        }
-        else{
-            orientation = orientation.moveBy(4);
-        }
-
+    public void move(MapVariant validator, Boundary bounds) {
+        moveVariant.move(validator, bounds, this);
     }
 
     public Animal reproduce(Animal other, int breedEnergy, int minMutations, int maxMutations){
@@ -77,7 +69,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
         other.energy -= breedEnergy;
         return new Animal(List.of(this, other), position, childEnergy,
                 genome.cross(other.getGenome(), energy + breedEnergy,
-                        other.getEnergy() + breedEnergy, minMutations, maxMutations));
+                        other.getEnergy() + breedEnergy, minMutations, maxMutations), moveVariant);
     }
 
     public Vector2d getPosition() {
@@ -96,6 +88,15 @@ public class Animal implements WorldElement, Comparable<Animal>{
     }
 
     public void setEnergy(int energy) { this.energy = energy; }
+
+    public void setOrientation(MapDirection orientation) {
+        this.orientation = orientation;
+    }
+
+    public void setPosition(Vector2d position) {
+        this.position = position;
+    }
+
     public AnimalStatistics getStatistics() {
         return statistics;
     }

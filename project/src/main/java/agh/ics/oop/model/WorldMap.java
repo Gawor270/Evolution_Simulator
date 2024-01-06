@@ -10,7 +10,7 @@ import java.util.UUID;
  *
  * @author apohllo, idzik
  */
-public interface WorldMap<WorldElement, P> extends MoveValidator<P> {
+public interface WorldMap<WorldElement, P> {
 
     /**
      * Place a animal on the map.
