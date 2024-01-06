@@ -32,6 +32,10 @@ public class BitOfMadness implements AnimalMoveVariant {
         if(randomNumber == 0){
             moveOnce(validator, bounds, animal);
             int randomind = random.nextInt(animal.getGenome().getGenome().size());
+            int check = animal.getGenome().getCurrentIndex();
+            while (randomind == check){
+                randomind = random.nextInt(animal.getGenome().getGenome().size());
+            }
             animal.getGenome().setIndex(randomind);
         }
         else{

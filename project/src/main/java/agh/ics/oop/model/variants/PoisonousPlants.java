@@ -8,6 +8,7 @@ import agh.ics.oop.model.util.RandomFreePositionGenerator;
 import agh.ics.oop.model.variantsInterfaces.PlantGrowthVariant;
 
 import java.util.Optional;
+import java.util.Random;
 
 public class PoisonousPlants implements PlantGrowthVariant {
 
@@ -16,11 +17,14 @@ public class PoisonousPlants implements PlantGrowthVariant {
     RandomFreePositionGenerator generator = new RandomFreePositionGenerator(100);
     @Override
     public void growPlants(int plantsCount, RectangularFloraMap map) {
+        Random random = new Random();
         for(int i = 0; i < plantsCount; i++){
             Optional<Vector2d> position = generator.getPosition();
             if(position.isPresent()){
                 Vector2d pos = position.get();
-                if(pos.getX() >= square.lowerBound().getX() && pos.getX() <= square.upperBound().getX() && pos.getY() >= square.lowerBound().getY() && pos.getY() <= square.upperBound().getY()) {
+                if(pos.getX() >= square.lowerBound().getX() && pos.getX() <= square.upperBound().getX() &&
+                        pos.getY() >= square.lowerBound().getY() && pos.getY() <= square.upperBound().getY() &&
+                random.nextInt(2) == 0 /* not always plant here is poisonous */) {
                     map.place(new Plant(pos,true));
                 }
                 else {
