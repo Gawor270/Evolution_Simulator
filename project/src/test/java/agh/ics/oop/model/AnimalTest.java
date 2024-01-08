@@ -2,6 +2,7 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.variants.ForestedEquator;
 import agh.ics.oop.model.variants.FullPredestination;
+import agh.ics.oop.model.variants.GlobeMap;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

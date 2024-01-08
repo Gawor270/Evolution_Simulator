@@ -1,5 +1,7 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.variants;
 
+import agh.ics.oop.model.Boundary;
+import agh.ics.oop.model.Vector2d;
 import agh.ics.oop.model.variantsInterfaces.MapVariant;
 
 import java.util.Optional;
