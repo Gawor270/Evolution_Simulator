@@ -1,8 +1,11 @@
-package agh.ics.oop.model;
+package agh.ics.oop.model.variantsInterfaces;
 
+import agh.ics.oop.model.Boundary;
 import agh.ics.oop.model.Vector2d;
 
-public interface MoveValidator<T> {
+import java.util.Optional;
+
+public interface MapVariant<T> {
 
     /**
      * Indicate if any object can move to the given position.
@@ -12,7 +15,5 @@ public interface MoveValidator<T> {
      * @return True if the object can move to that position.
      */
 
-    boolean canMoveTo(T position);
-
-    int getWidth();
+    Optional<Vector2d> nextPosition(T position, Boundary bounds);
 }

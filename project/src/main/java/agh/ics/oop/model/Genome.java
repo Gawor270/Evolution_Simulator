@@ -56,6 +56,10 @@ public class Genome {
         return currentIndex;
     }
 
+    public void setIndex(int index) {
+        currentIndex = index;
+    }
+
     public int nextGen(){
         currentIndex = (currentIndex + 1) % this.genome.size();
         return this.genome.get((currentIndex - 1 + this.genome.size()) % this.genome.size());
