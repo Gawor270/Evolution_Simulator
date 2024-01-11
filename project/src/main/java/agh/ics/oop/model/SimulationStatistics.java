@@ -14,6 +14,8 @@ public class SimulationStatistics {
     List<Genome> mostCommonGenomes;
     private float avgEnergy;
     private float avgLifespan;
+    private float totalAge;
+    private float totalDeaths;
     private float avgChildrenCount;
 
     public SimulationStatistics(Simulation simulation) {
@@ -28,8 +30,15 @@ public class SimulationStatistics {
         animalsCount--;
     }
 
-    public void increasePlantsCount(){
-        plantsCount++;
+    public void updateAvgLifespan(Animal animal){
+        totalAge += animal.getStatistics().getAge();
+        totalDeaths++;
+        avgLifespan = totalAge / totalDeaths;
+
+    }
+
+    public void increasePlantsCount(int x){
+        plantsCount+=x;
     }
 
     public void decreasePlantsCount(){
@@ -39,6 +48,19 @@ public class SimulationStatistics {
     public int getAnimalsCount() {
         return animalsCount;
     }
+
+    public int getPlantsCount() {
+        return plantsCount;
+    }
+
+    public void updateAvgEnergy(float energy){
+        avgEnergy = energy;
+    }
+
+    public void updateAvgChildrenCount(float childrenCount){
+        avgChildrenCount = childrenCount;
+    }
+
 
 
 

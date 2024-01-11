@@ -15,10 +15,12 @@ public class PoisonousPlants implements PlantGrowthVariant {
 
     RandomFreePositionGenerator generator = new RandomFreePositionGenerator(100);
     @Override
-    public void growPlants(int plantsCount, RectangularFloraMap map) {
+    public int growPlants(int plantsCount, RectangularFloraMap map) {
+        int counter = 0;
         for(int i = 0; i < plantsCount; i++){
             Optional<Vector2d> position = generator.getPosition();
             if(position.isPresent()){
+                counter++;
                 Vector2d pos = position.get();
                 if(pos.getX() >= square.lowerBound().getX() && pos.getX() <= square.upperBound().getX() && pos.getY() >= square.lowerBound().getY() && pos.getY() <= square.upperBound().getY()) {
                     map.place(new Plant(pos,true));
@@ -33,6 +35,7 @@ public class PoisonousPlants implements PlantGrowthVariant {
                 break;
             }
         }
+        return counter;
 
     }
 

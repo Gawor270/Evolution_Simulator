@@ -1,32 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Button?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            minHeight="550.0" minWidth="850.0"
-            fx:controller="agh.ics.oop.presenter.BuilderController">
-    <top>
-        <VBox alignment="CENTER" spacing="10">
-            <TextField fx:id="mapHeight" promptText="Enter moves"/>
-            <Button text="Start" onAction="#"/>
+            minHeight="500" minWidth="750"
+            fx:controller="agh.ics.oop.presenter.BuilderController" >
+
+    <HBox minHeight="500" minWidth="700">
+        <VBox minWidth="160" minHeight="500" >
+            <Label text="Choose Map File: " />
+            <ListView fx:id="fileListView" VBox.vgrow="ALWAYS" onMouseClicked="#handleFileSelection"/>
         </VBox>
-    </top>
-    <left>
-        <Label  fx:id="infoLabel" text="" textAlignment="CENTER"/>
-    </left>
+        <GridPane minWidth="540" minHeight="500" hgap = "10" vgap = "10">
+            <columnConstraints>
+                <ColumnConstraints minWidth="180"/>
+                <ColumnConstraints minWidth="180"/>
+                <ColumnConstraints minWidth="180"/>
+            </columnConstraints>
+            <Label text="Map Height:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="mapHeightField" promptText="Enter Map Height" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-    <center>
-        <GridPane xmlns="http://javafx.com/javafx"
-                  xmlns:fx="http://javafx.com/fxml"
-                  fx:id="mapGrid"
-                  alignment="CENTER"
-                  gridLinesVisible="true">
+            <Label text="Map Width:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="mapWidthField" promptText="Enter Map Width" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+
+            <Label text="Start Plants:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <TextField fx:id="startPlantsField" promptText="Enter Start Plants" GridPane.columnIndex="0" GridPane.rowIndex = "5"/>
+
+            <Label text="Start Animals:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextField fx:id="startAnimalsField" promptText="Enter Start Animals" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+
+            <Label text="Animal Start Energy:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <TextField fx:id="animalStartEnergyField" promptText="Enter Animal Start Energy" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+            <Label text="Plant Energy:" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="plantEnergyField" promptText="Enter Plant Energy" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="Daily Plants:" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <TextField fx:id="dailyPlantsField" promptText="Enter Daily Plants" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+            <Label text="Full Energy:" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <TextField fx:id="fullEnergyField" promptText="Enter Full Energy" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+            <Label text="Breeding Energy:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+            <TextField fx:id="breedingEnergyField" promptText="Enter Breeding Energy" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+            <Label text="Min Mutations:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+            <TextField fx:id="minMutationsField" promptText="Enter Min Mutations" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+
+            <Label text="Max Mutations:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+            <TextField fx:id="maxMutationsField" promptText="Enter Max Mutations" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+
+            <Label text="Genome Length:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+            <TextField fx:id="genomeLengthField" promptText="Enter Genome Length" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+
+            <!-- Labels and TextFields for other variables -->
+            <Label text = "Plant Growth Variant" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+            <ComboBox fx:id="plantGrowthVariant" promptText="Choose Plant Growth Variant: " GridPane.columnIndex="0" GridPane.rowIndex="9">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Forested Equator" />
+                        <String fx:value="Poisonous Plants" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Label text = "Animal Move Variant" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+            <ComboBox fx:id="animalMoveVariant" promptText="Choose Animal Move Variant: " GridPane.columnIndex="1" GridPane.rowIndex="9">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Bit Of Madness" />
+                        <String fx:value="Full Predestination" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Button fx:id="saveButton" text="Save" onAction="#saveSettings" GridPane.columnIndex="2" GridPane.rowIndex="9" alignment="CENTER"/>
+            <Button fx:id="startButton" text="Start" onAction="#startSimulation" GridPane.rowIndex="10" GridPane.columnIndex="1" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+            <TextField fx:id="saveFileName" promptText="Enter File Name" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
         </GridPane>
-    </center>
-</BorderPane>
+    </HBox>
 
+</BorderPane>

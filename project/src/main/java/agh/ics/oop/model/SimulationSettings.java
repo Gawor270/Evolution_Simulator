@@ -12,4 +12,5 @@ public record SimulationSettings(int mapHeight, int mapWidth,
                                  int maxMutations, int genomeLength,
                                  PlantGrowthVariant plantGrowthVariant, AnimalMoveVariant animalMoveVariant
                                  ){
+
 }

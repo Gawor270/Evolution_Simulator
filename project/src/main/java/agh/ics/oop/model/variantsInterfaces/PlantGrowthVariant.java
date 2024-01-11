@@ -6,7 +6,7 @@ import agh.ics.oop.model.RectangularFloraMap;
 
 public interface PlantGrowthVariant {
 
-    public void growPlants(int plantsCount, RectangularFloraMap map);
+    public int growPlants(int plantsCount, RectangularFloraMap map);
     public void removePlant(Plant plant, RectangularFloraMap map);
     public void setPositions(Boundary boundary);
 }

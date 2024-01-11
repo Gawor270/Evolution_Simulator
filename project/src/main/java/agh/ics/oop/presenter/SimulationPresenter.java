@@ -2,10 +2,15 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
@@ -13,60 +18,53 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import java.util.List;
-
+import java.util.Random;
 
 
 public class SimulationPresenter implements MapChangeListener {
-    private WorldMap map;
 
     @FXML
-    private Label infoLabel;
+    private LineChart<Number,Number> lineChart1;
+
     @FXML
-    private TextField moveListTextField;
+    private NumberAxis xAxis;
+
+
     @FXML
     private GridPane mapGrid;
+    @FXML
+    private Button pauseButton;
 
+    private Simulation simulation;
+
+    private int day = -1;
+
+    public void setSimulation(Simulation simulation) {
+        this.simulation = simulation;
+        simulation.addSimulationObserver(this);
+    }
     private final int WINDOW_SIZE = 400;
 
-    public void setWorldMap(WorldMap map) {this.map = map;}
     public void drawMap(WorldMap worldMap) {
         clearGrid();
         Boundary bounds = worldMap.getCurrentBounds();
-        int height = bounds.upperBound().getY() - bounds.lowerBound().getY()+2;
-        int width = bounds.upperBound().getX() - bounds.lowerBound().getX()+2;
+        int height = bounds.upperBound().getY();
+        int width = bounds.upperBound().getX();
 
-        for (int i = 0; i < width; i++) {
+        for (int i = 0; i <= width; i++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(WINDOW_SIZE/width)); // CELL_WIDTH to szerokość komórki
         }
 
-        for (int i = 0; i < height; i++) {
+        for (int i = 0; i <= height; i++) {
             mapGrid.getRowConstraints().add(new RowConstraints(WINDOW_SIZE/height)); // CELL_HEIGHT to wysokość komórki
         }
 
-        Label label = new Label("y/x");
-        mapGrid.add(label,0,0);
-        GridPane.setHalignment(label, HPos.CENTER);
-
-        for(int i=0; i<width-1; i++){
-            String elem = Integer.toString(bounds.lowerBound().getX() + i);
-            label = new Label(elem);
-            mapGrid.add(label,i+1,0);
-            GridPane.setHalignment(label, HPos.CENTER);
-        }
-
-        for(int i=0; i<height-1; i++){
-            String elem = Integer.toString(bounds.lowerBound().getY() + i);
-            label = new Label(elem);
-            mapGrid.add(label,0,height-1-i);
-            GridPane.setHalignment(label, HPos.CENTER);
-        }
-
-        for(int i=0; i<width-1; i++){
-            for(int j=0; j<height-1; j++){
+        for(int i=0; i<= width; i++){
+            for(int j=0; j<= height; j++){
                 if(worldMap.isOccupied(new Vector2d(bounds.lowerBound().getX() +i,bounds.lowerBound().getY() +j))){
                     String elem = worldMap.objectAt(new Vector2d(bounds.lowerBound().getX() +i,bounds.lowerBound().getY() +j)).toString();
-                    label = new Label(elem);
-                    mapGrid.add(label,i+1,height-1-j);
+                    Label label = new Label(elem);
+                    mapGrid.add(label,i,height-j);
                     GridPane.setHalignment(label, HPos.CENTER);
                 }
             }
@@ -83,17 +81,55 @@ public class SimulationPresenter implements MapChangeListener {
     public void mapChanged( WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             drawMap(worldMap);
-            infoLabel.setText(message);
+            if(day != simulation.getDay()){
+                day = simulation.getDay();
+                updateChartData();
+            }
         });
     }
 
-    public void onSimulationStartClicked(ActionEvent actionEvent) {
+    public void onPauseClicked(ActionEvent actionEvent) {
+        if(simulation.isPaused()){
+            simulation.resume();
+            pauseButton.setText("Pause");
+        }
+        else{
+            simulation.pause();
+            pauseButton.setText("Resume");
+        }
 
-        String userInput = moveListTextField.getText();
-        String[] moves = userInput.split(" ");
-        System.out.println(userInput);
+    }
+    private XYChart.Series<Number, Number> series;
+    private XYChart.Series<Number, Number> series2;
 
-        List<Vector2d> positions = List.of(new Vector2d(-1, -1), new Vector2d(7, 7));
+    @FXML
+    public void initialize() {
+        series = new XYChart.Series<>();
+        series2 = new XYChart.Series<>();
+
+        lineChart1.getData().add(series);
+        lineChart1.getData().add(series2);
+
+    }
+
+    private void updateChartData() {
+        double x = simulation.getDay();
+        double y1 = simulation.getStatistics().getAnimalsCount();
+        double y2 = simulation.getStatistics().getPlantsCount();
+
+
+        series.getData().add(new XYChart.Data<>(x, y1));
+        series2.getData().add(new XYChart.Data<>(x, y2));
+
+        if (series.getData().size() > 20) {
+            series.getData().remove(0);
+        }
+        if (series2.getData().size() > 20) {
+            series2.getData().remove(0);
+        }
+
+        xAxis.lowerBoundProperty().setValue(series.getData().get(0).getXValue());
+        xAxis.upperBoundProperty().setValue(series.getData().get(series.getData().size() - 1).getXValue());
 
     }
 }

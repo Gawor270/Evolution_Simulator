@@ -104,7 +104,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
 
     @Override
     public String toString() {
-        return asciiRepresentation.get(orientation);
+        return String.valueOf(this.energy) + " " + asciiRepresentation.get(orientation);
     }
     @Override
     public int hashCode() {

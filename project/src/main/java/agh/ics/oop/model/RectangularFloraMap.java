@@ -45,8 +45,8 @@ public class RectangularFloraMap extends AbstractWorldMap {
 
     }
 
-    public void growPlants(int plantsCount){
-        plantGrowthVariant.growPlants(plantsCount, this);
+    public int growPlants(int plantsCount){
+        return plantGrowthVariant.growPlants(plantsCount, this);
     }
     public void place(WorldElement element){
         if(element instanceof Plant) {

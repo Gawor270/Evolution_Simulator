@@ -16,11 +16,17 @@ public class ForestedEquator implements PlantGrowthVariant {
     RandomFreePositionGenerator positionGenerator;
 
     @Override
-    public void growPlants(int plantsCount, RectangularFloraMap map) {
+    public int growPlants(int plantsCount, RectangularFloraMap map) {
+        int counter = 0;
         for(int i = 0; i < plantsCount; i++){
             Optional<Vector2d> position = positionGenerator.getPosition();
+            if(position.isEmpty()){
+                continue;
+            }
             position.ifPresent(vector2d -> map.place(new Plant(vector2d)));
+            counter++;
         }
+        return counter;
     }
 
     @Override
