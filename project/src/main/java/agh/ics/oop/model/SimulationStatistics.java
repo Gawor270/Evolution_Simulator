@@ -12,6 +12,8 @@ public class SimulationStatistics {
     private int plantsCount;
     private int freeSpaceCount;
     List<Genome> mostCommonGenomes;
+
+    private float totalEnergy;
     private float avgEnergy;
     private float avgLifespan;
     private float totalAge;
@@ -52,9 +54,24 @@ public class SimulationStatistics {
     public int getPlantsCount() {
         return plantsCount;
     }
+    public void setFreeSpaceCount(int x){
+        freeSpaceCount = x;
+    }
 
-    public void updateAvgEnergy(float energy){
-        avgEnergy = energy;
+    public void updateTotalEnergy(float energy){
+        totalEnergy += energy;
+    }
+
+    public float getAvgEnergy(){
+        return totalEnergy / animalsCount;
+    }
+
+    public int getFreeSpaceCount() {
+        return freeSpaceCount;
+    }
+
+    public float getAvgLifespan(){
+        return avgLifespan;
     }
 
     public void updateAvgChildrenCount(float childrenCount){

@@ -10,8 +10,7 @@ public class GlobeMap implements MapVariant<Vector2d> {
 
     @Override
     public Optional<Vector2d> nextPosition(Vector2d position, Boundary globeBounds){
-        if(position.getY() >= 0 && position.getY() <= globeBounds.upperBound().getY()
-                && position.getX() >= 0 && position.getX() <= globeBounds.upperBound().getX()){
+        if(position.getY() >= 0 && position.getY() <= globeBounds.upperBound().getY()){
             int width = globeBounds.upperBound().getX() + 1;
             return Optional.of(new Vector2d((position.getX() + width )%width, position.getY()));
         }

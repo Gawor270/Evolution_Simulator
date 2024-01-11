@@ -45,9 +45,11 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
 
     public void remove(WorldElement element){
         if(element instanceof Animal){
-            animals.get(element.getPosition()).remove(((Animal)element));
-            if(animals.get(element.getPosition()).isEmpty())
-                animals.remove(element.getPosition());
+            if(animals.containsKey(element.getPosition())){
+                animals.get(element.getPosition()).remove(((Animal)element));
+                if(animals.get(element.getPosition()).isEmpty())
+                    animals.remove(element.getPosition());
+            }
         }
     }
 
@@ -69,7 +71,7 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
     }
     @Override
     public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position) && !animals.get(position).isEmpty();
+        return animals.containsKey(position);
     }
 
     @Override
@@ -79,6 +81,9 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
         return null;
     }
 
+    public Map<Vector2d, TreeSet<Animal>> getAnimals() {
+        return animals;
+    }
 
     public void setMapVariant(MapVariant mapVariant) {
         this.mapVariant = mapVariant;

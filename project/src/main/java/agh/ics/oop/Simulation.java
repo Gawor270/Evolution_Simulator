@@ -32,21 +32,22 @@ public class Simulation implements Runnable{
     public Simulation(SimulationSettings settings){
         statistics = new SimulationStatistics(this);
         statistics.increasePlantsCount(settings.startPlants());
+        statistics.updateTotalEnergy(settings.startAnimals() * settings.animalStartEnergy());
         worldMap = new RectangularFloraMap(settings.mapWidth(), settings.mapHeight(), settings.startPlants(), new GlobeMap(), settings.plantGrowthVariant());
         animals = new ArrayList<>();
         this.settings = settings;
-        spawnAnimals(settings.startAnimals(), settings.animalStartEnergy(), settings.mapWidth(), settings.mapHeight(), settings.animalMoveVariant());
+        spawnAnimals();
     }
 
     public void addSimulationObserver(MapChangeListener observer){
         worldMap.registerObserver(observer);
     }
 
-    private void spawnAnimals(int startAnimals, int animalStartEnergy,int w,int h, AnimalMoveVariant animalMoveVariant){
+    private void spawnAnimals(){
         Random random = new Random();
-        for(int i = 0; i < startAnimals; i++){
-            Vector2d position = new Vector2d(random.nextInt(w), random.nextInt(h));
-            Animal animal = new Animal(null, position, animalStartEnergy, settings.genomeLength() , animalMoveVariant);
+        for(int i = 0; i < settings.startAnimals(); i++){
+            Vector2d position = new Vector2d(random.nextInt(settings.mapWidth()), random.nextInt(settings.mapHeight()));
+            Animal animal = new Animal(null, position, settings.animalStartEnergy(), settings.genomeLength() , settings.animalMoveVariant());
             animals.add(animal);
             worldMap.place(animal);
             statistics.increaseAnimalsCount();
@@ -56,6 +57,7 @@ public class Simulation implements Runnable{
 
 
     private void consumeAndBreed(){
+        ArrayList<Animal> toAdd = new ArrayList();
         for(Map.Entry<Vector2d, TreeSet<Animal>> entry : worldMap.getAnimals().entrySet()){
             Vector2d position = entry.getKey();
             TreeSet<Animal> animals = entry.getValue();
@@ -63,10 +65,12 @@ public class Simulation implements Runnable{
                 Animal strongest = animals.first();
                 if(worldMap.getPlants().get(position) != null) {
                     if(worldMap.getPlants().get(position).isPoisonous()){
+                        statistics.updateTotalEnergy(-Math.min(strongest.getEnergy(), settings.plantEnergy()));
                         strongest.setEnergy(strongest.getEnergy() - settings.plantEnergy());
                     }
                     else{
                         strongest.setEnergy(strongest.getEnergy() + settings.plantEnergy());
+                        statistics.updateTotalEnergy(settings.plantEnergy());
                     }
                     worldMap.removePlant(worldMap.getPlants().get(position));
                     statistics.decreasePlantsCount();
@@ -75,11 +79,15 @@ public class Simulation implements Runnable{
                     Animal secondStrongest = animals.stream().skip(1).findFirst().get();
                     if(secondStrongest.getEnergy() >= settings.fullEnergy()){
                         Animal child = strongest.reproduce(secondStrongest,settings.breedingEnergy(), settings.minMutations(), settings.maxMutations());
-                        worldMap.place(child);
+                        toAdd.add(child);
+                        this.animals.add(child);
                         statistics.increaseAnimalsCount();
                     }
                 }
             }
+        }
+        for(Animal animal : toAdd){
+            worldMap.place(animal);
         }
     }
 
@@ -99,6 +107,8 @@ public class Simulation implements Runnable{
     private void moveAnimals(){
         for(Animal animal : animals){
             animal.decreseEnergy();
+            animal.getStatistics().getOlder();
+            statistics.updateTotalEnergy(-1);
             worldMap.move(animal);
         }
     }
@@ -125,10 +135,26 @@ public class Simulation implements Runnable{
 
     private void executeOneStep(){
         removeDeadAnimals();
+        worldMap.notifyObservers(worldMap, "Day " + day);
         moveAnimals();
+        worldMap.notifyObservers(worldMap, "Day " + day);
         consumeAndBreed();
+        worldMap.notifyObservers(worldMap, "Day " + day);
         statistics.increasePlantsCount(worldMap.growPlants(settings.dailyPlants()));
+        updateFreeSpaceCount();
         day++;
+    }
+
+    private void updateFreeSpaceCount(){
+        int count = 0;
+        for(int i = 0; i < settings.mapWidth(); i++){
+            for(int j = 0; j < settings.mapHeight(); j++){
+                if(!worldMap.isOccupied(new Vector2d(i,j))){
+                    count++;
+                }
+            }
+        }
+        statistics.setFreeSpaceCount(count);
     }
 
     public void pause(){

@@ -2,17 +2,20 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
+import com.sun.javafx.charts.Legend;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -24,10 +27,16 @@ import java.util.Random;
 public class SimulationPresenter implements MapChangeListener {
 
     @FXML
-    private LineChart<Number,Number> lineChart1;
+    private LineChart<Number,Number> countChart;
 
     @FXML
     private NumberAxis xAxis;
+
+    @FXML
+    private LineChart<Number,Number> averageChart;
+
+    @FXML
+    private NumberAxis xAxis2;
 
 
     @FXML
@@ -61,9 +70,14 @@ public class SimulationPresenter implements MapChangeListener {
 
         for(int i=0; i<= width; i++){
             for(int j=0; j<= height; j++){
-                if(worldMap.isOccupied(new Vector2d(bounds.lowerBound().getX() +i,bounds.lowerBound().getY() +j))){
-                    String elem = worldMap.objectAt(new Vector2d(bounds.lowerBound().getX() +i,bounds.lowerBound().getY() +j)).toString();
+                if(worldMap.isOccupied(new Vector2d(i,j))){
+                    String elem = worldMap.objectAt(new Vector2d(i,j)).toString();
                     Label label = new Label(elem);
+                    mapGrid.add(label,i,height-j);
+                    GridPane.setHalignment(label, HPos.CENTER);
+                }
+                else{
+                    Label label = new Label("");
                     mapGrid.add(label,i,height-j);
                     GridPane.setHalignment(label, HPos.CENTER);
                 }
@@ -99,16 +113,29 @@ public class SimulationPresenter implements MapChangeListener {
         }
 
     }
-    private XYChart.Series<Number, Number> series;
-    private XYChart.Series<Number, Number> series2;
+    private XYChart.Series<Number, Number> animalsCount;
+    private XYChart.Series<Number, Number> plantsCount;
+
+    private XYChart.Series<Number, Number> freeSpaceCount;
+
+    private XYChart.Series<Number, Number> averageLifespan;
+    private XYChart.Series<Number, Number> averageEnergy;
 
     @FXML
     public void initialize() {
-        series = new XYChart.Series<>();
-        series2 = new XYChart.Series<>();
+        animalsCount = new XYChart.Series<>();
+        animalsCount.setName("Number of animals");
+        plantsCount = new XYChart.Series<>();
+        plantsCount.setName("Number of plants");
+        freeSpaceCount = new XYChart.Series<>();
+        freeSpaceCount.setName("Number of free spaces");
+        averageLifespan = new XYChart.Series<>();
+        averageLifespan.setName("Average lifespan");
+        averageEnergy = new XYChart.Series<>();
+        averageEnergy.setName("Average energy");
 
-        lineChart1.getData().add(series);
-        lineChart1.getData().add(series2);
+        countChart.getData().addAll(animalsCount, plantsCount, freeSpaceCount);
+        averageChart.getData().addAll(averageLifespan,averageEnergy);
 
     }
 
@@ -116,20 +143,47 @@ public class SimulationPresenter implements MapChangeListener {
         double x = simulation.getDay();
         double y1 = simulation.getStatistics().getAnimalsCount();
         double y2 = simulation.getStatistics().getPlantsCount();
+        double y3 = simulation.getStatistics().getFreeSpaceCount();
+
+        double y4 = simulation.getStatistics().getAvgLifespan();
+        double y5 = simulation.getStatistics().getAvgEnergy();
 
 
-        series.getData().add(new XYChart.Data<>(x, y1));
-        series2.getData().add(new XYChart.Data<>(x, y2));
+        animalsCount.getData().add(new XYChart.Data<>(x, y1));
+        plantsCount.getData().add(new XYChart.Data<>(x, y2));
+        freeSpaceCount.getData().add(new XYChart.Data<>(x, y3));
 
-        if (series.getData().size() > 20) {
-            series.getData().remove(0);
+        averageLifespan.getData().add(new XYChart.Data<>(x, y4));
+        averageEnergy.getData().add(new XYChart.Data<>(x, y5));
+
+        if (animalsCount.getData().size() > 20) {
+            animalsCount.getData().remove(0);
         }
-        if (series2.getData().size() > 20) {
-            series2.getData().remove(0);
+        if (plantsCount.getData().size() > 20) {
+            plantsCount.getData().remove(0);
+        }
+        if (freeSpaceCount.getData().size() > 20) {
+            freeSpaceCount.getData().remove(0);
         }
 
-        xAxis.lowerBoundProperty().setValue(series.getData().get(0).getXValue());
-        xAxis.upperBoundProperty().setValue(series.getData().get(series.getData().size() - 1).getXValue());
+        if (averageLifespan.getData().size() > 20) {
+            averageLifespan.getData().remove(0);
+        }
+        if(averageEnergy.getData().size() > 20){
+            averageEnergy.getData().remove(0);
+        }
 
+        xAxis.lowerBoundProperty().setValue(animalsCount.getData().get(0).getXValue());
+        xAxis.upperBoundProperty().setValue(animalsCount.getData().get(animalsCount.getData().size() - 1).getXValue());
+
+        xAxis2.lowerBoundProperty().setValue(averageLifespan.getData().get(0).getXValue());
+        xAxis2.upperBoundProperty().setValue(averageLifespan.getData().get(averageLifespan.getData().size() - 1).getXValue());
+    }
+
+    @FXML
+    private void handleGridPaneClick(MouseEvent mouseEvent){
+        int clickedRow = mapGrid.getRowIndex((Node) mouseEvent.getSource());
+        int clickedColumn = mapGrid.getColumnIndex((Node) mouseEvent.getSource());
+        System.out.println("Clicked cell: " + clickedColumn + " " + clickedRow);
     }
 }

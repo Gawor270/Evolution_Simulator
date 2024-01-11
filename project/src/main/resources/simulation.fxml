@@ -16,10 +16,10 @@
     </top>
     <left>
         <TabPane>
-            <Tab text="Animals count">
+            <Tab text="Counts">
                 <content>
                     <AnchorPane>
-                        <LineChart fx:id = "lineChart1" animated="false" legendVisible="false"  title="Animals count">
+                        <LineChart fx:id = "countChart" animated="false" legendVisible="true">
                             <xAxis>
                                 <NumberAxis fx:id = "xAxis" side="BOTTOM" autoRanging="false"/>
                             </xAxis>
@@ -31,12 +31,12 @@
                 </content>
             </Tab>
 
-            <Tab text="Plants count">
+            <Tab text="Averages">
                 <content>
                     <AnchorPane>
-                        <LineChart fx:id = "lineChart2" animated="false" legendVisible="false"  title="Plants count">
+                        <LineChart fx:id = "averageChart" animated="false">
                             <xAxis>
-                                <NumberAxis side="BOTTOM"/>
+                                <NumberAxis fx:id="xAxis2" side="BOTTOM" autoRanging="false"/>
                             </xAxis>
                             <yAxis>
                                 <NumberAxis side="LEFT" />
@@ -50,7 +50,6 @@
     </left>
 
     <center>
-        <GridPane fx:id="mapGrid" alignment="CENTER" gridLinesVisible="true" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-        </GridPane>
+        <GridPane fx:id="mapGrid" alignment="CENTER" onMouseClicked="#handleGridPaneClick" gridLinesVisible="true" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" />
     </center>
 </BorderPane>

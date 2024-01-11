@@ -16,7 +16,7 @@ public class RectangularFloraMap extends AbstractWorldMap {
     private PlantGrowthVariant plantGrowthVariant;
     protected Map<Vector2d, Plant> plants = new HashMap();
     public RectangularFloraMap(int width, int height, int startPlants, MapVariant mapVariant, PlantGrowthVariant plantGrowthVariant) {
-        globeBounds = new Boundary(new Vector2d(0,0), new Vector2d(width, height));
+        globeBounds = new Boundary(new Vector2d(0,0), new Vector2d(width-1, height-1));
         super.setMapVariant(mapVariant);
         setPlantGrowthVariant(plantGrowthVariant);
         plantGrowthVariant.setPositions(globeBounds);
@@ -35,12 +35,9 @@ public class RectangularFloraMap extends AbstractWorldMap {
     @Override
     public void move(WorldElement element) {
         if(element instanceof Animal){
-            Vector2d startpos = element.getPosition();
             remove(element);
             ((Animal) element).move(mapVariant, globeBounds);
-            String info = "animal moved from" + startpos.toString() + "to" + element.getPosition().toString();
             place(element);
-            mapChanged(info);
         }
 
     }
@@ -51,7 +48,6 @@ public class RectangularFloraMap extends AbstractWorldMap {
     public void place(WorldElement element){
         if(element instanceof Plant) {
             plants.put(element.getPosition(), (Plant) element);
-            notifyObservers(this, "Plant added at " + element.getPosition());
         }else{
             super.place(element);
         }
@@ -85,11 +81,6 @@ public class RectangularFloraMap extends AbstractWorldMap {
     public Map<Vector2d, Plant> getPlants() {
         return plants;
     }
-
-    public int getWidth(){
-        return globeBounds.upperBound().getX()+1;
-    }
-
     @Override
     protected WorldMap getWorldMap() {
         return this;
