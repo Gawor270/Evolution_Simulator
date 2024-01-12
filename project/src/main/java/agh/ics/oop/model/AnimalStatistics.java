@@ -9,6 +9,8 @@ public class AnimalStatistics {
     private int descendantsCounter =0;
     private int plantCounter = 0;
 
+    private int deathDay = -1;
+
     private final Animal animal;
     public AnimalStatistics(Animal animal) {
         this.animal = animal;
@@ -47,6 +49,14 @@ public class AnimalStatistics {
 
     public int getDescendantsCounter(){ return descendantsCounter; }
 
+    public int getPlantCounter() {
+        return plantCounter;
+    }
+
+    public int getDeathDay() {
+        return deathDay;
+    }
+
     public void increasePlantCounter(){
         plantCounter++;
     }
@@ -57,6 +67,10 @@ public class AnimalStatistics {
 
     public void increaseDescendantsCounter(){
         descendantsCounter++;
+    }
+
+    public void setDeathDay(int deathDay) {
+        this.deathDay = deathDay;
     }
 
 }

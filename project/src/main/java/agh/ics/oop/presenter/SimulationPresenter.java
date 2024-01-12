@@ -2,26 +2,22 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
-import com.sun.javafx.charts.Legend;
-import javafx.animation.AnimationTimer;
+import agh.ics.oop.model.util.ImageSupplier;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
-
-import java.util.List;
-import java.util.Random;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -43,46 +39,92 @@ public class SimulationPresenter implements MapChangeListener {
     private GridPane mapGrid;
     @FXML
     private Button pauseButton;
+    @FXML
+    private Button fieldsButton;
+    @FXML
+    private Button animalsButton;
+    @FXML
+    private Label dayLabel;
 
+    @FXML
+    private Label dominantGenomeLabel;
     private Simulation simulation;
 
+    private XYChart.Series<Number, Number> animalsCount;
+    private XYChart.Series<Number, Number> plantsCount;
+
+    private XYChart.Series<Number, Number> freeSpaceCount;
+
+    private XYChart.Series<Number, Number> averageLifespan;
+    private XYChart.Series<Number, Number> averageEnergy;
+
+    private XYChart.Series<Number, Number> averageChildrenCount;
+    @FXML
+    public void initialize() {
+        animalsCount = new XYChart.Series<>();
+        animalsCount.setName("Number of animals");
+        plantsCount = new XYChart.Series<>();
+        plantsCount.setName("Number of plants");
+        freeSpaceCount = new XYChart.Series<>();
+        freeSpaceCount.setName("Number of free spaces");
+        averageLifespan = new XYChart.Series<>();
+        averageLifespan.setName("Average lifespan");
+        averageEnergy = new XYChart.Series<>();
+        averageEnergy.setName("Average energy");
+        averageChildrenCount = new XYChart.Series<>();
+        averageChildrenCount.setName("Average children count");
+
+        countChart.getData().addAll(animalsCount, plantsCount, freeSpaceCount);
+        averageChart.getData().addAll(averageLifespan,averageEnergy, averageChildrenCount);
+
+    }
     private int day = -1;
 
     public void setSimulation(Simulation simulation) {
         this.simulation = simulation;
         simulation.addSimulationObserver(this);
     }
-    private final int WINDOW_SIZE = 400;
+    private final int WINDOW_SIZE = 500;
 
+    private ImageSupplier imageSupplier = new ImageSupplier();
     public void drawMap(WorldMap worldMap) {
         clearGrid();
         Boundary bounds = worldMap.getCurrentBounds();
         int height = bounds.upperBound().getY();
         int width = bounds.upperBound().getX();
 
+        int bigger = Math.max(height, width);
+        int squareSize = WINDOW_SIZE/bigger;
+
         for (int i = 0; i <= width; i++) {
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(WINDOW_SIZE/width)); // CELL_WIDTH to szerokość komórki
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(squareSize)); // CELL_WIDTH to szerokość komórki
         }
 
         for (int i = 0; i <= height; i++) {
-            mapGrid.getRowConstraints().add(new RowConstraints(WINDOW_SIZE/height)); // CELL_HEIGHT to wysokość komórki
+            mapGrid.getRowConstraints().add(new RowConstraints(squareSize)); // CELL_HEIGHT to wysokość komórki
         }
+        mapGrid.setStyle("-fx-background-color: #67aa67; -fx-grid-lines-visible: true; fx-border-width: 2px; -fx-border-color: black");
 
         for(int i=0; i<= width; i++){
             for(int j=0; j<= height; j++){
                 if(worldMap.isOccupied(new Vector2d(i,j))){
-                    String elem = worldMap.objectAt(new Vector2d(i,j)).toString();
-                    Label label = new Label(elem);
-                    mapGrid.add(label,i,height-j);
-                    GridPane.setHalignment(label, HPos.CENTER);
+                    ImageView imageView = imageSupplier.getImageView(worldMap.objectAt(new Vector2d(i,j)), simulation.getSettings().fullEnergy());
+                    imageView.setFitHeight(squareSize);
+                    imageView.setFitWidth(squareSize);
+                    mapGrid.add(imageView, i, j);
+//                    mapGrid.add(new Label(worldMap.objectAt(new Vector2d(i,j)).toString()), i, j);
                 }
-                else{
-                    Label label = new Label("");
-                    mapGrid.add(label,i,height-j);
-                    GridPane.setHalignment(label, HPos.CENTER);
-                }
+                addPane(i,j);
             }
         }
+    }
+
+    private void addPane(int i, int j){
+        Pane pane = new Pane();
+        pane.setOnMouseClicked((MouseEvent event) -> {
+            handleGridPaneClick(i,j);
+        });
+        mapGrid.add(pane, i, j);
     }
 
     private void clearGrid() {
@@ -104,42 +146,26 @@ public class SimulationPresenter implements MapChangeListener {
 
     public void onPauseClicked(ActionEvent actionEvent) {
         if(simulation.isPaused()){
+            animalsButton.setVisible(false);
+            fieldsButton.setVisible(false);
             simulation.resume();
             pauseButton.setText("Pause");
         }
         else{
             simulation.pause();
+            animalsButton.setVisible(true);
+            fieldsButton.setVisible(true);
             pauseButton.setText("Resume");
         }
 
     }
-    private XYChart.Series<Number, Number> animalsCount;
-    private XYChart.Series<Number, Number> plantsCount;
 
-    private XYChart.Series<Number, Number> freeSpaceCount;
 
-    private XYChart.Series<Number, Number> averageLifespan;
-    private XYChart.Series<Number, Number> averageEnergy;
 
-    @FXML
-    public void initialize() {
-        animalsCount = new XYChart.Series<>();
-        animalsCount.setName("Number of animals");
-        plantsCount = new XYChart.Series<>();
-        plantsCount.setName("Number of plants");
-        freeSpaceCount = new XYChart.Series<>();
-        freeSpaceCount.setName("Number of free spaces");
-        averageLifespan = new XYChart.Series<>();
-        averageLifespan.setName("Average lifespan");
-        averageEnergy = new XYChart.Series<>();
-        averageEnergy.setName("Average energy");
-
-        countChart.getData().addAll(animalsCount, plantsCount, freeSpaceCount);
-        averageChart.getData().addAll(averageLifespan,averageEnergy);
-
-    }
 
     private void updateChartData() {
+        dayLabel.setText("Day: " + simulation.getDay());
+        dominantGenomeLabel.setText("Dominant genome: " + simulation.getStatistics().getMostCommonGenome().toString());
         double x = simulation.getDay();
         double y1 = simulation.getStatistics().getAnimalsCount();
         double y2 = simulation.getStatistics().getPlantsCount();
@@ -147,6 +173,7 @@ public class SimulationPresenter implements MapChangeListener {
 
         double y4 = simulation.getStatistics().getAvgLifespan();
         double y5 = simulation.getStatistics().getAvgEnergy();
+        double y6 = simulation.getStatistics().getAvgChildrenCount();
 
 
         animalsCount.getData().add(new XYChart.Data<>(x, y1));
@@ -155,6 +182,7 @@ public class SimulationPresenter implements MapChangeListener {
 
         averageLifespan.getData().add(new XYChart.Data<>(x, y4));
         averageEnergy.getData().add(new XYChart.Data<>(x, y5));
+        averageChildrenCount.getData().add(new XYChart.Data<>(x, y6));
 
         if (animalsCount.getData().size() > 20) {
             animalsCount.getData().remove(0);
@@ -172,6 +200,9 @@ public class SimulationPresenter implements MapChangeListener {
         if(averageEnergy.getData().size() > 20){
             averageEnergy.getData().remove(0);
         }
+        if(averageChildrenCount.getData().size() > 20){
+            averageChildrenCount.getData().remove(0);
+        }
 
         xAxis.lowerBoundProperty().setValue(animalsCount.getData().get(0).getXValue());
         xAxis.upperBoundProperty().setValue(animalsCount.getData().get(animalsCount.getData().size() - 1).getXValue());
@@ -181,9 +212,49 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @FXML
-    private void handleGridPaneClick(MouseEvent mouseEvent){
-        int clickedRow = mapGrid.getRowIndex((Node) mouseEvent.getSource());
-        int clickedColumn = mapGrid.getColumnIndex((Node) mouseEvent.getSource());
-        System.out.println("Clicked cell: " + clickedColumn + " " + clickedRow);
+    private Label beforeSelect;
+    @FXML
+    private Label selectedAnimalGenome;
+    @FXML
+    private Label selectedAnimalEnergy;
+    @FXML
+    private Label selectedAnimalChildren;
+    @FXML
+    private Label selectedAnimalAge;
+    @FXML
+    private Label selectedAnimalDescendants;
+    @FXML
+    private Label selectedAnimalEaten;
+    @FXML
+    private Label selectedAnimalDeathDay;
+
+    private void handleGridPaneClick(int x, int y){
+        if(simulation.isPaused()){
+            WorldElement element = simulation.getWorldMap().objectAt(new Vector2d(x,y));
+            if(element instanceof Animal){
+                Animal A = (Animal) element;
+                beforeSelect.setVisible(false);
+                selectedAnimalGenome.setVisible(true);
+                selectedAnimalGenome.setText("Genome: " + A.getGenome().toString());
+                selectedAnimalEnergy.setVisible(true);
+                selectedAnimalEnergy.setText("Energy: " + A.getEnergy());
+                selectedAnimalChildren.setVisible(true);
+                selectedAnimalChildren.setText("Children: " + A.getStatistics().getChildrenCounter());
+                selectedAnimalAge.setVisible(true);
+                selectedAnimalAge.setText("Age: " + A.getStatistics().getAge());
+                selectedAnimalEaten.setVisible(true);
+                selectedAnimalEaten.setText("Eaten: " + A.getStatistics().getPlantCounter());
+                selectedAnimalDescendants.setText("Descendants: " + A.getStatistics().getDescendantsCounter());
+                selectedAnimalDescendants.setVisible(true);
+                if(A.getStatistics().getDeathDay() != -1){
+                    selectedAnimalDeathDay.setText("Death day: " + A.getStatistics().getDeathDay());
+                    selectedAnimalDeathDay.setVisible(true);
+                }
+                else{
+                    selectedAnimalDeathDay.setVisible(false);
+                }
+            }
+
+        }
     }
 }

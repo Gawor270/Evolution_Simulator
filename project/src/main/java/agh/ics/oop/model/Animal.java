@@ -113,12 +113,10 @@ public class Animal implements WorldElement, Comparable<Animal>{
 
     @Override
     public int compareTo(Animal o) {
+        if(this == o)return 0;
         if(this.energy == o.getEnergy()){
             if(statistics.getAge() == o.statistics.getAge()){
                 if(statistics.getChildrenCounter() == o.statistics.getChildrenCounter()){
-                    if(this == o){
-                        return 0;
-                    }
                     return (int) Math.pow(-1, (int) (Math.random() * 2));
                 }
                 return Integer.compare(o.statistics.getChildrenCounter(), statistics.getChildrenCounter());

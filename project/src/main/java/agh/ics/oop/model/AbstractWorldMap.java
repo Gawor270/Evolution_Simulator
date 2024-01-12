@@ -76,8 +76,7 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        if(animals.containsKey(position) && !animals.get(position).isEmpty())
-            return animals.get(position).first();
+        if(animals.containsKey(position)) return animals.get(position).first();
         return null;
     }
 

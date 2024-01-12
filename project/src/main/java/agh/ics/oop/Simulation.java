@@ -51,6 +51,7 @@ public class Simulation implements Runnable{
             animals.add(animal);
             worldMap.place(animal);
             statistics.increaseAnimalsCount();
+            statistics.updateGenomesCount(animal.getGenome());
         }
     }
 
@@ -60,27 +61,29 @@ public class Simulation implements Runnable{
         ArrayList<Animal> toAdd = new ArrayList();
         for(Map.Entry<Vector2d, TreeSet<Animal>> entry : worldMap.getAnimals().entrySet()){
             Vector2d position = entry.getKey();
-            TreeSet<Animal> animals = entry.getValue();
-            if(animals != null){
-                Animal strongest = animals.first();
+            TreeSet<Animal> animalsEntry = entry.getValue();
+            if(animalsEntry != null){
+                Animal strongest = animalsEntry.first();
                 if(worldMap.getPlants().get(position) != null) {
                     if(worldMap.getPlants().get(position).isPoisonous()){
                         statistics.updateTotalEnergy(-Math.min(strongest.getEnergy(), settings.plantEnergy()));
-                        strongest.setEnergy(strongest.getEnergy() - settings.plantEnergy());
+                        strongest.eatPlant(-settings.plantEnergy());
                     }
                     else{
-                        strongest.setEnergy(strongest.getEnergy() + settings.plantEnergy());
                         statistics.updateTotalEnergy(settings.plantEnergy());
+                        strongest.setEnergy(settings.plantEnergy());
                     }
                     worldMap.removePlant(worldMap.getPlants().get(position));
                     statistics.decreasePlantsCount();
                 }
-                if(animals.size() > 1  && animals.first().getEnergy() >= settings.fullEnergy()){
-                    Animal secondStrongest = animals.stream().skip(1).findFirst().get();
+                if(animalsEntry.size() > 1  && animalsEntry.first().getEnergy() >= settings.fullEnergy()){
+                    Animal secondStrongest = animalsEntry.stream().skip(1).findFirst().get();
                     if(secondStrongest.getEnergy() >= settings.fullEnergy()){
                         Animal child = strongest.reproduce(secondStrongest,settings.breedingEnergy(), settings.minMutations(), settings.maxMutations());
                         toAdd.add(child);
                         this.animals.add(child);
+                        statistics.updateGenomesCount(child.getGenome());
+                        statistics.updateTotalChildrenCount(2);
                         statistics.increaseAnimalsCount();
                     }
                 }
@@ -97,7 +100,9 @@ public class Simulation implements Runnable{
             if(animal.getEnergy() <= 0){
                 statistics.decreaseAnimalsCount();
                 statistics.updateAvgLifespan(animal);
+                statistics.updateTotalChildrenCount(-animal.getStatistics().getChildrenCounter());
                 worldMap.remove(animal);
+                animal.getStatistics().setDeathDay(day);
                 toRemove.add(animal);
             }
         }
@@ -124,9 +129,9 @@ public class Simulation implements Runnable{
                 }
             }
             executeOneStep();
-            increaseDay();
+            day++;
             try {
-                sleep(100);
+                sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -177,11 +182,15 @@ public class Simulation implements Runnable{
         return day;
     }
 
-    public void increaseDay(){
-        day++;
-    }
-
     public SimulationStatistics getStatistics(){
         return statistics;
+    }
+
+    public SimulationSettings getSettings() {
+        return settings;
+    }
+
+    public RectangularFloraMap getWorldMap() {
+        return worldMap;
     }
 }

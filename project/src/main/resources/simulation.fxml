@@ -8,48 +8,70 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import java.lang.String?>
 
-<BorderPane minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+<BorderPane minHeight="550.0" minWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="agh.ics.oop.presenter.SimulationPresenter">
     <top>
-        <VBox alignment="CENTER" spacing="10">
+        <HBox alignment="CENTER" spacing="10">
             <Button fx:id = "pauseButton" onAction="#onPauseClicked" text="Pause" />
-        </VBox>
+            <Button fx:id = "fieldsButton"  text="Show most used fields" visible="false" />
+            <Button fx:id = "animalsButton" text="Show animals with dominant genome" visible="false"/>
+        </HBox>
     </top>
     <left>
-        <TabPane>
-            <Tab text="Counts">
-                <content>
-                    <AnchorPane>
-                        <LineChart fx:id = "countChart" animated="false" legendVisible="true">
-                            <xAxis>
-                                <NumberAxis fx:id = "xAxis" side="BOTTOM" autoRanging="false"/>
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis side="LEFT" />
-                            </yAxis>
-                        </LineChart>
-                    </AnchorPane>
-                </content>
-            </Tab>
+        <VBox>
+            <TabPane minWidth="250">
+                <Tab text="Counts">
+                    <content>
+                        <AnchorPane>
+                            <LineChart fx:id = "countChart" animated="false" legendVisible="true">
+                                <xAxis>
+                                    <NumberAxis fx:id = "xAxis" side="BOTTOM" autoRanging="false"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis side="LEFT" />
+                                </yAxis>
+                            </LineChart>
+                        </AnchorPane>
+                    </content>
+                </Tab>
 
-            <Tab text="Averages">
-                <content>
-                    <AnchorPane>
-                        <LineChart fx:id = "averageChart" animated="false">
-                            <xAxis>
-                                <NumberAxis fx:id="xAxis2" side="BOTTOM" autoRanging="false"/>
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis side="LEFT" />
-                            </yAxis>
-                        </LineChart>
-                    </AnchorPane>
-                </content>
-            </Tab>
+                <Tab text="Averages">
+                    <content>
+                        <AnchorPane>
+                            <LineChart fx:id = "averageChart" animated="false">
+                                <xAxis>
+                                    <NumberAxis fx:id="xAxis2" side="BOTTOM" autoRanging="false"/>
+                                </xAxis>
+                                <yAxis>
+                                    <NumberAxis side="LEFT" />
+                                </yAxis>
+                            </LineChart>
+                        </AnchorPane>
+                    </content>
+                </Tab>
 
-        </TabPane>
+            </TabPane>
+
+            <VBox alignment="CENTER">
+                <Label text="Tracked Animal: "/>
+                <Label fx:id="beforeSelect" text="Click on animal to track its details" />
+                <Label fx:id="selectedAnimalGenome" text="genome: " visible="false"/>
+                <Label fx:id="selectedAnimalEnergy" text="energy: " visible="false"/>
+                <Label fx:id="selectedAnimalEaten" text="eaten plants: " visible="false"/>
+                <Label fx:id="selectedAnimalChildren" text="children: " visible="false"/>
+                <Label fx:id="selectedAnimalDescendants" text="descendants: " visible="false"/>
+                <Label fx:id="selectedAnimalAge" text="age: " visible="false"/>
+                <Label fx:id="selectedAnimalDeathDay" text="death day: " visible="false"/>
+            </VBox>
+        </VBox>
     </left>
 
-    <center>
-        <GridPane fx:id="mapGrid" alignment="CENTER" onMouseClicked="#handleGridPaneClick" gridLinesVisible="true" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" />
-    </center>
+    <right >
+        <VBox spacing="20">
+            <HBox spacing="20">
+                <Label fx:id="dayLabel" text="Day: 0" alignment="BASELINE_LEFT"/>
+                <Label fx:id="dominantGenomeLabel" text="Dominant genome: " alignment="BASELINE_RIGHT"/>
+            </HBox>
+            <GridPane fx:id="mapGrid" alignment="CENTER"  gridLinesVisible="true" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" />
+        </VBox>
+    </right>
 </BorderPane>
