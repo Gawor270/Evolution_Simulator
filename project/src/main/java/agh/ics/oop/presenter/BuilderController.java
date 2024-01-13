@@ -17,6 +17,7 @@ import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.w3c.dom.Text;
 
@@ -135,15 +136,18 @@ public class BuilderController {
 
         SimulationPresenter presenter = loader.getController();
 
-        stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
+        stage = new Stage();
+        //stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("NewHope");
         stage.show();
 
         Simulation simulation = builder.build(presenter);
         presenter.setSimulation(simulation);
         Thread thread = new Thread(simulation);
         thread.start();
+
     }
 
     public void saveSettings(ActionEvent actionEvent){
