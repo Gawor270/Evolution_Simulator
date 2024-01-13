@@ -6,7 +6,6 @@ import agh.ics.oop.model.util.ImageSupplier;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -59,6 +58,8 @@ public class SimulationPresenter implements MapChangeListener {
     private XYChart.Series<Number, Number> averageEnergy;
 
     private XYChart.Series<Number, Number> averageChildrenCount;
+
+    private Animal trackedAnimal = null;
     @FXML
     public void initialize() {
         animalsCount = new XYChart.Series<>();
@@ -108,7 +109,7 @@ public class SimulationPresenter implements MapChangeListener {
         for(int i=0; i<= width; i++){
             for(int j=0; j<= height; j++){
                 if(worldMap.isOccupied(new Vector2d(i,j))){
-                    ImageView imageView = imageSupplier.getImageView(worldMap.objectAt(new Vector2d(i,j)), simulation.getSettings().fullEnergy());
+                    ImageView imageView = imageSupplier.getImageView(worldMap.objectAt(new Vector2d(i,j)), simulation.getSettings().fullEnergy(), trackedAnimal);
                     imageView.setFitHeight(squareSize);
                     imageView.setFitWidth(squareSize);
                     mapGrid.add(imageView, i, j);
@@ -139,7 +140,7 @@ public class SimulationPresenter implements MapChangeListener {
             drawMap(worldMap);
             if(day != simulation.getDay()){
                 day = simulation.getDay();
-                updateChartData();
+                updateData();
             }
         });
     }
@@ -160,12 +161,38 @@ public class SimulationPresenter implements MapChangeListener {
 
     }
 
-
-
-
-    private void updateChartData() {
+    private void updateData(){
         dayLabel.setText("Day: " + simulation.getDay());
         dominantGenomeLabel.setText("Dominant genome: " + simulation.getStatistics().getMostCommonGenome().toString());
+        updateChartData();
+        updateTrackedAnimal();
+        drawMap(simulation.getWorldMap());
+    }
+    private void updateTrackedAnimal(){
+        if(trackedAnimal != null) {
+            beforeSelect.setVisible(false);
+            selectedAnimalGenome.setVisible(true);
+            selectedAnimalGenome.setText("Genome: " + trackedAnimal.getGenome().toString());
+            selectedAnimalEnergy.setVisible(true);
+            selectedAnimalEnergy.setText("Energy: " + trackedAnimal.getEnergy());
+            selectedAnimalChildren.setVisible(true);
+            selectedAnimalChildren.setText("Children: " + trackedAnimal.getStatistics().getChildrenCounter());
+            selectedAnimalAge.setVisible(true);
+            selectedAnimalAge.setText("Age: " + trackedAnimal.getStatistics().getAge());
+            selectedAnimalEaten.setVisible(true);
+            selectedAnimalEaten.setText("Eaten: " + trackedAnimal.getStatistics().getPlantCounter());
+            selectedAnimalDescendants.setText("Descendants: " + trackedAnimal.getStatistics().getDescendantsCounter());
+            selectedAnimalDescendants.setVisible(true);
+            if (trackedAnimal.getStatistics().getDeathDay() != -1) {
+                selectedAnimalDeathDay.setText("Death day: " + trackedAnimal.getStatistics().getDeathDay());
+                selectedAnimalDeathDay.setVisible(true);
+            } else {
+                selectedAnimalDeathDay.setVisible(false);
+            }
+        }
+    }
+
+    private void updateChartData() {
         double x = simulation.getDay();
         double y1 = simulation.getStatistics().getAnimalsCount();
         double y2 = simulation.getStatistics().getPlantsCount();
@@ -232,29 +259,19 @@ public class SimulationPresenter implements MapChangeListener {
         if(simulation.isPaused()){
             WorldElement element = simulation.getWorldMap().objectAt(new Vector2d(x,y));
             if(element instanceof Animal){
-                Animal A = (Animal) element;
-                beforeSelect.setVisible(false);
-                selectedAnimalGenome.setVisible(true);
-                selectedAnimalGenome.setText("Genome: " + A.getGenome().toString());
-                selectedAnimalEnergy.setVisible(true);
-                selectedAnimalEnergy.setText("Energy: " + A.getEnergy());
-                selectedAnimalChildren.setVisible(true);
-                selectedAnimalChildren.setText("Children: " + A.getStatistics().getChildrenCounter());
-                selectedAnimalAge.setVisible(true);
-                selectedAnimalAge.setText("Age: " + A.getStatistics().getAge());
-                selectedAnimalEaten.setVisible(true);
-                selectedAnimalEaten.setText("Eaten: " + A.getStatistics().getPlantCounter());
-                selectedAnimalDescendants.setText("Descendants: " + A.getStatistics().getDescendantsCounter());
-                selectedAnimalDescendants.setVisible(true);
-                if(A.getStatistics().getDeathDay() != -1){
-                    selectedAnimalDeathDay.setText("Death day: " + A.getStatistics().getDeathDay());
-                    selectedAnimalDeathDay.setVisible(true);
-                }
-                else{
-                    selectedAnimalDeathDay.setVisible(false);
-                }
+                trackedAnimal = (Animal) element;
+                updateTrackedAnimal();
+                drawMap(simulation.getWorldMap());
             }
 
         }
+    }
+
+    @FXML
+    private void showFieldsDistribution(ActionEvent event){
+    }
+
+    @FXML
+    private void showDominantGenomeAnimals(ActionEvent event){
     }
 }

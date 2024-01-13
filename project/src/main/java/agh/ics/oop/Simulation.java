@@ -1,12 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
-import agh.ics.oop.model.variants.BitOfMadness;
 import agh.ics.oop.model.variants.GlobeMap;
-import agh.ics.oop.model.variants.PoisonousPlants;
-import agh.ics.oop.model.variantsInterfaces.AnimalMoveVariant;
-import agh.ics.oop.model.variantsInterfaces.MapVariant;
-import agh.ics.oop.presenter.SimulationPresenter;
 
 import java.util.*;
 
@@ -71,7 +66,7 @@ public class Simulation implements Runnable{
                     }
                     else{
                         statistics.updateTotalEnergy(settings.plantEnergy());
-                        strongest.setEnergy(settings.plantEnergy());
+                        strongest.eatPlant(settings.plantEnergy());
                     }
                     worldMap.removePlant(worldMap.getPlants().get(position));
                     statistics.decreasePlantsCount();
@@ -95,18 +90,19 @@ public class Simulation implements Runnable{
     }
 
     private void removeDeadAnimals(){
-        List<Animal> toRemove = new ArrayList<>();
-        for(Animal animal : animals){
+
+        Iterator<Animal> iterator = animals.iterator();
+        while(iterator.hasNext()){
+            Animal animal = iterator.next();
             if(animal.getEnergy() <= 0){
                 statistics.decreaseAnimalsCount();
                 statistics.updateAvgLifespan(animal);
                 statistics.updateTotalChildrenCount(-animal.getStatistics().getChildrenCounter());
                 worldMap.remove(animal);
                 animal.getStatistics().setDeathDay(day);
-                toRemove.add(animal);
+                iterator.remove();
             }
         }
-        animals.removeAll(toRemove);
     }
 
     private void moveAnimals(){
@@ -129,9 +125,8 @@ public class Simulation implements Runnable{
                 }
             }
             executeOneStep();
-            day++;
             try {
-                sleep(1000);
+                sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

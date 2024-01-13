@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AnimalStatistics {
 
@@ -33,6 +34,12 @@ public class AnimalStatistics {
                 parent.getStatistics().increaseDescendantsCounter();
             }
         }
+    }
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(age, childrenCounter, descendantsCounter, plantCounter, deathDay);
     }
 
     public void getOlder(){

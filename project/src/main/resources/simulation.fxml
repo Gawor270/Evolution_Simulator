@@ -12,8 +12,8 @@
     <top>
         <HBox alignment="CENTER" spacing="10">
             <Button fx:id = "pauseButton" onAction="#onPauseClicked" text="Pause" />
-            <Button fx:id = "fieldsButton"  text="Show most used fields" visible="false" />
-            <Button fx:id = "animalsButton" text="Show animals with dominant genome" visible="false"/>
+            <Button fx:id = "fieldsButton" onAction="#showFieldsDistribution"  text="Show most used fields" visible="false" />
+            <Button fx:id = "animalsButton" onAction="#showDominantGenomeAnimals" ontext="Show animals with dominant genome" visible="false"/>
         </HBox>
     </top>
     <left>
@@ -51,7 +51,7 @@
 
             </TabPane>
 
-            <VBox alignment="CENTER">
+            <VBox alignment="CENTER" style="-fx-background-color: gray">
                 <Label text="Tracked Animal: "/>
                 <Label fx:id="beforeSelect" text="Click on animal to track its details" />
                 <Label fx:id="selectedAnimalGenome" text="genome: " visible="false"/>

@@ -45,10 +45,16 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
 
     public void remove(WorldElement element){
         if(element instanceof Animal){
-            if(animals.containsKey(element.getPosition())){
-                animals.get(element.getPosition()).remove(((Animal)element));
-                if(animals.get(element.getPosition()).isEmpty())
-                    animals.remove(element.getPosition());
+            Iterator<Animal> iterator = animals.get(element.getPosition()).iterator();
+            while(iterator.hasNext()){
+                Animal animal = iterator.next();
+                if(animal.equals(element)){
+                    iterator.remove();
+                    break;
+                }
+            }
+            if(animals.get(element.getPosition()).isEmpty()){
+                animals.remove(element.getPosition());
             }
         }
     }
