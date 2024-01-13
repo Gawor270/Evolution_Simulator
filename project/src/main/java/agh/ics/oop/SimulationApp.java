@@ -20,6 +20,7 @@ public class SimulationApp extends Application {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("SettingsWindow.fxml"));
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Settings");
         primaryStage.show();
     }
 
@@ -30,4 +31,18 @@ public class SimulationApp extends Application {
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
+
+
+    public static void openSimulationWindow() {
+        try {
+            Stage simulationStage = new Stage();
+            Parent simulationRoot = FXMLLoader.load(SimulationApp.class.getClassLoader().getResource("simulation.fxml"));
+            Scene simulationScene = new Scene(simulationRoot);
+            simulationStage.setScene(simulationScene);
+            simulationStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
