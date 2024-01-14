@@ -35,3 +35,8 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+    sourceCompatibility = JavaVersion.VERSION_17.toString()
+    targetCompatibility = JavaVersion.VERSION_17.toString()
+}

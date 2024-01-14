@@ -67,7 +67,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
         int childEnergy = 2*breedEnergy;
         energy -= breedEnergy;
         other.energy -= breedEnergy;
-        return new Animal(List.of(this, other), position, childEnergy,
+        return new Animal(new ArrayList<>(List.of(this, other)), position, childEnergy,
                 genome.cross(other.getGenome(), energy + breedEnergy,
                         other.getEnergy() + breedEnergy, minMutations, maxMutations), moveVariant);
     }
@@ -106,23 +106,30 @@ public class Animal implements WorldElement, Comparable<Animal>{
     public String toString() {
         return String.valueOf(this.energy) + " " + asciiRepresentation.get(orientation);
     }
-    @Override
-    public int hashCode() {
-        return Objects.hash(orientation, position);
-    }
 
     @Override
     public int compareTo(Animal o) {
-        if(this == o)return 0;
-        if(this.energy == o.getEnergy()){
-            if(statistics.getAge() == o.statistics.getAge()){
-                if(statistics.getChildrenCounter() == o.statistics.getChildrenCounter()){
-                    return (int) Math.pow(-1, (int) (Math.random() * 2));
-                }
-                return Integer.compare(o.statistics.getChildrenCounter(), statistics.getChildrenCounter());
-            }
-            return Integer.compare(o.statistics.getAge(), statistics.getAge());
+
+        int compareOrientation = Integer.compare(o.getOrientation().ordinal(), this.orientation.ordinal());
+        if(compareOrientation != 0){
+            return compareOrientation;
         }
-        return Integer.compare(o.getEnergy(),this.energy);
+
+        int energyCompare = Integer.compare(o.getEnergy(), this.energy);
+        if(energyCompare != 0){
+            return energyCompare;
+        }
+
+        int ageCompare = Integer.compare(o.statistics.getAge(), statistics.getAge());
+        if(ageCompare != 0){
+            return ageCompare;
+        }
+
+        int childrenCompare = Integer.compare(o.statistics.getChildrenCounter(), statistics.getChildrenCounter());
+        if(childrenCompare != 0){
+            return childrenCompare;
+        }
+
+        return (int) Math.pow(-1, o.hashCode() % 2);
     }
 }

@@ -71,6 +71,11 @@ public class Genome {
     }
 
     @Override
+    public int hashCode() {
+        return genome.hashCode();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if(obj == null || !(obj instanceof Genome)) return false;
         return this.genome.equals(((Genome) obj).getGenome());
