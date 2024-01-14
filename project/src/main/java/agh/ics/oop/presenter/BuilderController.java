@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 
 import javafx.scene.control.ListView;
@@ -78,6 +79,9 @@ public class BuilderController {
     @FXML
     private ListView<String> fileListView;
 
+    @FXML
+    private CheckBox saveToCsv;
+
 
     @FXML
     public void initialize(){
@@ -115,6 +119,7 @@ public class BuilderController {
         builder.setMinMutations(Integer.parseInt(minMutationsField.getText()));
         builder.setMaxMutations(Integer.parseInt(maxMutationsField.getText()));
         builder.setGenomeLength(Integer.parseInt(genomeLengthField.getText()));
+        builder.setSaveToCSV(saveToCsv.isSelected());
 
         if(plantGrowthVariant.getValue().equals("Poisonous Plants")){
             System.out.println(plantGrowthVariant.getValue());
@@ -166,6 +171,7 @@ public class BuilderController {
         builder.setGenomeLength(Integer.parseInt(genomeLengthField.getText()));
         builder.setAnimalMoveVariantName(animalMoveVariant.getValue().toString());
         builder.setPlantGrowthVariantName(plantGrowthVariant.getValue().toString());
+        builder.setSaveToCSV(saveToCsv.isSelected());
 
         builder.saveToJson(saveFileName.getText());
         initialize();
@@ -188,5 +194,6 @@ public class BuilderController {
         genomeLengthField.setText(String.valueOf(builder.getGenomeLength()));
         plantGrowthVariant.setValue(builder.getPlantGrowthVariantName());
         animalMoveVariant.setValue(builder.getAnimalMoveVariantName());
+        saveToCsv.setSelected(builder.getSaveToCSV());
     }
 }

@@ -10,7 +10,8 @@ public record SimulationSettings(int mapHeight, int mapWidth,
                                  int dailyPlants, int fullEnergy,
                                  int breedingEnergy, int minMutations,
                                  int maxMutations, int genomeLength,
-                                 PlantGrowthVariant plantGrowthVariant, AnimalMoveVariant animalMoveVariant
+                                 PlantGrowthVariant plantGrowthVariant, AnimalMoveVariant animalMoveVariant,
+                                 boolean saveToCsv
                                  ){
 
 }

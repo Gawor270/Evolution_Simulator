@@ -34,6 +34,8 @@ public class SettingsBuilder {
 
     private String animalMoveVariantName;
 
+    private boolean saveToCSV;
+
     @JsonIgnore
     private PlantGrowthVariant plantGrowthVariant;
 
@@ -106,6 +108,10 @@ public class SettingsBuilder {
         this.plantGrowthVariantName = plantGrowthVariantName;
     }
 
+    public void setSaveToCSV(boolean saveToCSV) {
+        this.saveToCSV = saveToCSV;
+    }
+
     public int getAnimalStartEnergy() {
         return animalStartEnergy;
     }
@@ -166,12 +172,16 @@ public class SettingsBuilder {
         return plantGrowthVariantName;
     }
 
+    public boolean getSaveToCSV() {
+        return saveToCSV;
+    }
+
     @JsonIgnore
     public Simulation build(SimulationPresenter presenter) {
         SimulationSettings settings = new SimulationSettings(mapHeight, mapWidth,
                 startPlants, startAnimals, animalStartEnergy, plantEnergy, dailyPlants,
                 fullEnergy, breedingEnergy, minMutations, maxMutations, genomeLength,
-                plantGrowthVariant, animalMoveVariant);
+                plantGrowthVariant, animalMoveVariant, saveToCSV);
         return new Simulation(settings);
     }
 

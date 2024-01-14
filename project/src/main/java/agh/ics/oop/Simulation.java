@@ -30,6 +30,9 @@ public class Simulation implements Runnable{
         statistics.updateTotalEnergy(settings.startAnimals() * settings.animalStartEnergy());
         worldMap = new RectangularFloraMap(settings.mapWidth(), settings.mapHeight(), settings.startPlants(), new GlobeMap(), settings.plantGrowthVariant());
         animals = new ArrayList<>();
+        if(settings.saveToCsv()){
+            statistics.addHeader();
+        }
         this.settings = settings;
         spawnAnimals();
     }
@@ -143,6 +146,7 @@ public class Simulation implements Runnable{
         statistics.increasePlantsCount(worldMap.growPlants(settings.dailyPlants()));
         updateFreeSpaceCount();
         day++;
+        if(settings.saveToCsv()) statistics.saveToCsv();
     }
 
     private void updateFreeSpaceCount(){

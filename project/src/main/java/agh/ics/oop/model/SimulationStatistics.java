@@ -2,6 +2,11 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.Simulation;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,10 +25,14 @@ public class SimulationStatistics {
     private float totalDeaths;
     private float totalChildrenCount;
 
+    private String fileName;
+
 
 
     public SimulationStatistics(Simulation simulation) {
         this.simulation = simulation;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+        fileName = "statisticslog" + dateFormat.format(new Date()) + ".csv";
     }
 
     public void increaseAnimalsCount(){
@@ -104,5 +113,21 @@ public class SimulationStatistics {
         return avgLifespan;
     }
 
-
+    public void addHeader(){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("./project/src/main/java/logs/" + fileName, true))){
+            writer.write("Day,Animals,Plants,Free space,Avg lifespan,Avg energy,Avg children count,Most common genome\n");
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    public void saveToCsv(){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("./project/src/main/java/logs/" + fileName, true))){
+            writer.write(simulation.getDay() + "," + getAnimalsCount() + "," + getPlantsCount() + "," + getFreeSpaceCount() + "," +
+                    getAvgLifespan() + "," + getAvgEnergy() + "," + getAvgChildrenCount() + "," + getMostCommonGenome() + "\n");
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }
