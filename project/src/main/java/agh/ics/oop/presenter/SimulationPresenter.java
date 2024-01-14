@@ -11,6 +11,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -18,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.List;
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -32,7 +34,6 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private NumberAxis xAxis2;
-
 
     @FXML
     private GridPane mapGrid;
@@ -60,6 +61,26 @@ public class SimulationPresenter implements MapChangeListener {
     private XYChart.Series<Number, Number> averageChildrenCount;
 
     private Animal trackedAnimal = null;
+
+    @FXML
+    private Label beforeSelect;
+    @FXML
+    private Label selectedAnimalGenome;
+    @FXML
+    private Label selectedAnimalEnergy;
+    @FXML
+    private Label selectedAnimalChildren;
+    @FXML
+    private Label selectedAnimalAge;
+    @FXML
+    private Label selectedAnimalDescendants;
+    @FXML
+    private Label selectedAnimalEaten;
+    @FXML
+    private Label selectedAnimalDeathDay;
+    private int day = -1;
+    private final int WINDOW_SIZE = 500;
+    private ImageSupplier imageSupplier;
     @FXML
     public void initialize() {
         animalsCount = new XYChart.Series<>();
@@ -77,17 +98,13 @@ public class SimulationPresenter implements MapChangeListener {
 
         countChart.getData().addAll(animalsCount, plantsCount, freeSpaceCount);
         averageChart.getData().addAll(averageLifespan,averageEnergy, averageChildrenCount);
-
     }
-    private int day = -1;
 
     public void setSimulation(Simulation simulation) {
         this.simulation = simulation;
         simulation.addSimulationObserver(this);
+        imageSupplier = new ImageSupplier(this);
     }
-    private final int WINDOW_SIZE = 500;
-
-    private ImageSupplier imageSupplier = new ImageSupplier();
     public void drawMap(WorldMap worldMap) {
         clearGrid();
         Boundary bounds = worldMap.getCurrentBounds();
@@ -109,13 +126,13 @@ public class SimulationPresenter implements MapChangeListener {
         for(int i=0; i<= width; i++){
             for(int j=0; j<= height; j++){
                 if(worldMap.isOccupied(new Vector2d(i,j))){
-                    ImageView imageView = imageSupplier.getImageView(worldMap.objectAt(new Vector2d(i,j)), simulation.getSettings().fullEnergy(), trackedAnimal);
-                    imageView.setFitHeight(squareSize);
-                    imageView.setFitWidth(squareSize);
+                    ImageView imageView = imageSupplier.getImageView(worldMap.objectAt(new Vector2d(i,j)));
                     mapGrid.add(imageView, i, j);
+                    if(worldMap.objectAt(new Vector2d(i,j)) instanceof Animal){
+                        addPane(i,j);
+                    }
 //                    mapGrid.add(new Label(worldMap.objectAt(new Vector2d(i,j)).toString()), i, j);
                 }
-                addPane(i,j);
             }
         }
     }
@@ -166,7 +183,6 @@ public class SimulationPresenter implements MapChangeListener {
         dominantGenomeLabel.setText("Dominant genome: " + simulation.getStatistics().getMostCommonGenome().toString());
         updateChartData();
         updateTrackedAnimal();
-        drawMap(simulation.getWorldMap());
     }
     private void updateTrackedAnimal(){
         if(trackedAnimal != null) {
@@ -238,22 +254,7 @@ public class SimulationPresenter implements MapChangeListener {
         xAxis2.upperBoundProperty().setValue(averageLifespan.getData().get(averageLifespan.getData().size() - 1).getXValue());
     }
 
-    @FXML
-    private Label beforeSelect;
-    @FXML
-    private Label selectedAnimalGenome;
-    @FXML
-    private Label selectedAnimalEnergy;
-    @FXML
-    private Label selectedAnimalChildren;
-    @FXML
-    private Label selectedAnimalAge;
-    @FXML
-    private Label selectedAnimalDescendants;
-    @FXML
-    private Label selectedAnimalEaten;
-    @FXML
-    private Label selectedAnimalDeathDay;
+
 
     private void handleGridPaneClick(int x, int y){
         if(simulation.isPaused()){
@@ -266,12 +267,28 @@ public class SimulationPresenter implements MapChangeListener {
 
         }
     }
-
     @FXML
     private void showFieldsDistribution(ActionEvent event){
     }
 
     @FXML
     private void showDominantGenomeAnimals(ActionEvent event){
+        List<Animal> toHighlight = simulation.getMostCommonGenomeAnimals();
+        for(Animal animal : toHighlight){
+            ImageView imageView = imageSupplier.getRedAnimalImage(animal);
+            mapGrid.add(imageView, animal.getPosition().getX(), animal.getPosition().getY());
+        }
+    }
+
+    public int getWINDOW_SIZE() {
+        return WINDOW_SIZE;
+    }
+
+    public Simulation getSimulation() {
+        return simulation;
+    }
+
+    public Animal getTrackedAnimal() {
+        return trackedAnimal;
     }
 }

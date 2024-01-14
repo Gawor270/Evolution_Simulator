@@ -14,16 +14,16 @@ public class SimulationStatistics {
 
     private Simulation simulation;
 
-    private int animalsCount;
-    private int plantsCount;
-    private int freeSpaceCount;
+    private int animalsCount = 0;
+    private int plantsCount = 0;
+    private int freeSpaceCount = 0;
     HashMap<Genome, Integer> genomesCount = new HashMap<>();
 
-    private float totalEnergy;
-    private float avgLifespan;
-    private float totalAge;
-    private float totalDeaths;
-    private float totalChildrenCount;
+    private float totalEnergy = 0;
+    private float avgLifespan = 0;
+    private float totalAge = 0;
+    private float totalDeaths = 0;
+    private float totalChildrenCount = 0;
 
     private String fileName;
 
@@ -77,6 +77,7 @@ public class SimulationStatistics {
         totalChildrenCount += childrenCount;
     }
     public float getAvgChildrenCount(){
+        if(totalDeaths == 0) return 0;
         return totalChildrenCount / totalDeaths;
     }
 
@@ -86,6 +87,13 @@ public class SimulationStatistics {
         }
         else{
             genomesCount.put(genome, 1);
+        }
+    }
+
+    public void decreaseGenome(Genome genome){
+        genomesCount.put(genome, genomesCount.get(genome) - 1);
+        if(genomesCount.get(genome) == 0){
+            genomesCount.remove(genome);
         }
     }
 

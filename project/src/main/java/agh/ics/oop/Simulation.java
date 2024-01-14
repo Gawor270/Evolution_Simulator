@@ -4,26 +4,21 @@ import agh.ics.oop.model.*;
 import agh.ics.oop.model.variants.GlobeMap;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 
 public class Simulation implements Runnable{
-
-    private final Object lock = new Object();
-
-    private boolean isPaused = false;
-
-    public boolean isPaused(){
-        return isPaused;
-    }
 
     private List<Animal> animals;
     private SimulationStatistics statistics;
 
     private final RectangularFloraMap worldMap;
     private SimulationSettings settings;
-
     private int day = 0;
+    private final Object lock = new Object();
+    private boolean isPaused = false;
+
     public Simulation(SimulationSettings settings){
         statistics = new SimulationStatistics(this);
         statistics.increasePlantsCount(settings.startPlants());
@@ -56,7 +51,7 @@ public class Simulation implements Runnable{
 
 
     private void consumeAndBreed(){
-        ArrayList<Animal> toAdd = new ArrayList();
+        ArrayList<Animal> toAdd = new ArrayList<>();
         for(Map.Entry<Vector2d, TreeSet<Animal>> entry : worldMap.getAnimals().entrySet()){
             Vector2d position = entry.getKey();
             TreeSet<Animal> animalsEntry = entry.getValue();
@@ -103,6 +98,7 @@ public class Simulation implements Runnable{
                 statistics.updateTotalChildrenCount(-animal.getStatistics().getChildrenCounter());
                 worldMap.remove(animal);
                 animal.getStatistics().setDeathDay(day);
+                statistics.decreaseGenome(animal.getGenome());
                 iterator.remove();
             }
         }
@@ -161,6 +157,10 @@ public class Simulation implements Runnable{
         statistics.setFreeSpaceCount(count);
     }
 
+    public boolean isPaused(){
+        return isPaused;
+    }
+
     public void pause(){
         synchronized (lock){
             isPaused = true;
@@ -173,23 +173,22 @@ public class Simulation implements Runnable{
         }
     }
 
-    public List<Animal> getAnimals(){
-        return animals;
-    }
-
     public int getDay() {
         return day;
-    }
-
-    public SimulationStatistics getStatistics(){
-        return statistics;
     }
 
     public SimulationSettings getSettings() {
         return settings;
     }
 
+    public SimulationStatistics getStatistics(){
+        return statistics;
+    }
+
     public RectangularFloraMap getWorldMap() {
         return worldMap;
+    }
+    public List<Animal> getMostCommonGenomeAnimals(){
+        return animals.stream().filter(animal -> animal.getGenome().equals(statistics.getMostCommonGenome())).collect(Collectors.toList());
     }
 }
