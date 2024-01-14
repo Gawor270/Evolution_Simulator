@@ -57,4 +57,6 @@ public class ForestedEquator implements PlantGrowthVariant {
             }
         }
     }
+
+    public Boundary getEquator(){return this.equator;}
 }

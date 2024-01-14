@@ -3,6 +3,8 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.ImageSupplier;
+import agh.ics.oop.model.variants.ForestedEquator;
+import agh.ics.oop.model.variants.PoisonousPlants;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,13 +13,11 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.List;
 
@@ -59,7 +59,6 @@ public class SimulationPresenter implements MapChangeListener {
     private XYChart.Series<Number, Number> averageEnergy;
 
     private XYChart.Series<Number, Number> averageChildrenCount;
-
     private Animal trackedAnimal = null;
 
     @FXML
@@ -127,6 +126,8 @@ public class SimulationPresenter implements MapChangeListener {
             for(int j=0; j<= height; j++){
                 if(worldMap.isOccupied(new Vector2d(i,j))){
                     ImageView imageView = imageSupplier.getImageView(worldMap.objectAt(new Vector2d(i,j)));
+                    imageView.setFitHeight(squareSize);
+                    imageView.setFitWidth(squareSize);
                     mapGrid.add(imageView, i, j);
                     if(worldMap.objectAt(new Vector2d(i,j)) instanceof Animal){
                         addPane(i,j);
@@ -178,6 +179,32 @@ public class SimulationPresenter implements MapChangeListener {
 
     }
 
+    public void onFieldsButtonClicked(ActionEvent actionEvent) {
+        Boundary boundary;
+        if (simulation.getWorldMap().getPlantGrowthVariant() instanceof PoisonousPlants) {
+            boundary = ((PoisonousPlants) simulation.getWorldMap().getPlantGrowthVariant()).getSquare();
+        } else {
+            boundary = ((ForestedEquator) simulation.getWorldMap().getPlantGrowthVariant()).getEquator();
+        }
+
+        Boundary bounds = simulation.getWorldMap().getCurrentBounds();
+        int height = bounds.upperBound().getY();
+        int width = bounds.upperBound().getX();
+
+        int bigger = Math.max(height, width);
+        int squareSize = WINDOW_SIZE / bigger;
+
+        for (int i = boundary.lowerBound().getX(); i <= boundary.upperBound().getX(); i++) {
+            for (int j = boundary.lowerBound().getY(); j <= boundary.upperBound().getY(); j++) {
+                javafx.scene.shape.Rectangle square = new Rectangle(squareSize, squareSize);
+                square.setFill(Color.BLUE);
+                square.setOpacity(0.5);
+                mapGrid.add(square, i, j);
+            }
+        }
+    }
+
+
     private void updateData(){
         dayLabel.setText("Day: " + simulation.getDay());
         dominantGenomeLabel.setText("Dominant genome: " + simulation.getStatistics().getMostCommonGenome().toString());
@@ -207,7 +234,6 @@ public class SimulationPresenter implements MapChangeListener {
             }
         }
     }
-
     private void updateChartData() {
         double x = simulation.getDay();
         double y1 = simulation.getStatistics().getAnimalsCount();
@@ -267,12 +293,9 @@ public class SimulationPresenter implements MapChangeListener {
 
         }
     }
-    @FXML
-    private void showFieldsDistribution(ActionEvent event){
-    }
 
     @FXML
-    private void showDominantGenomeAnimals(ActionEvent event){
+    private void onAnimalButtonClicked(ActionEvent event){
         List<Animal> toHighlight = simulation.getMostCommonGenomeAnimals();
         for(Animal animal : toHighlight){
             ImageView imageView = imageSupplier.getRedAnimalImage(animal);

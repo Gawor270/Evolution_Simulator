@@ -85,4 +85,6 @@ public class RectangularFloraMap extends AbstractWorldMap {
     protected WorldMap getWorldMap() {
         return this;
     }
+
+    public PlantGrowthVariant getPlantGrowthVariant(){return this.plantGrowthVariant;}
 }
