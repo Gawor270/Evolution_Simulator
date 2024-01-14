@@ -58,4 +58,6 @@ public class PoisonousPlants implements PlantGrowthVariant {
             }
         }
     }
+
+    public Boundary getSquare(){return this.square;}
 }

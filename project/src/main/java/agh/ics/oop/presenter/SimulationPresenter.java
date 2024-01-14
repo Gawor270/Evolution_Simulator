@@ -3,21 +3,27 @@ package agh.ics.oop.presenter;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.ImageSupplier;
+import agh.ics.oop.model.variants.ForestedEquator;
+import agh.ics.oop.model.variants.PoisonousPlants;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SimulationPresenter implements MapChangeListener {
@@ -59,6 +65,9 @@ public class SimulationPresenter implements MapChangeListener {
     private XYChart.Series<Number, Number> averageEnergy;
 
     private XYChart.Series<Number, Number> averageChildrenCount;
+
+    private boolean areAnimalsHighlight = false;
+
     @FXML
     public void initialize() {
         animalsCount = new XYChart.Series<>();
@@ -161,6 +170,65 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 
+    public void onFieldsButtonClicked(ActionEvent actionEvent) {
+        Boundary boundary;
+        if (simulation.getWorldMap().getPlantGrowthVariant() instanceof PoisonousPlants) {
+            boundary = ((PoisonousPlants) simulation.getWorldMap().getPlantGrowthVariant()).getSquare();
+        } else {
+            boundary = ((ForestedEquator) simulation.getWorldMap().getPlantGrowthVariant()).getEquator();
+        }
+
+        Boundary bounds = simulation.getWorldMap().getCurrentBounds();
+        int height = bounds.upperBound().getY();
+        int width = bounds.upperBound().getX();
+
+        int bigger = Math.max(height, width);
+        int squareSize = WINDOW_SIZE / bigger;
+
+        for (int i = boundary.lowerBound().getX(); i <= boundary.upperBound().getX(); i++) {
+            for (int j = boundary.lowerBound().getY(); j <= boundary.upperBound().getY(); j++) {
+                javafx.scene.shape.Rectangle square = new Rectangle(squareSize, squareSize);
+                square.setFill(Color.BLUE);
+                mapGrid.add(square, i, j);
+            }
+        }
+    }
+
+
+    public void onAnimalButtonClicked(ActionEvent actionEvent) throws FileNotFoundException {
+        List<Animal> animals = simulation.getAnimals();
+        Genome dominateGenom = simulation.getStatistics().getMostCommonGenome();
+        int n = animals.size();
+        List<Animal> dominus = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if (animals.get(i).getGenome() == dominateGenom) {
+                dominus.add(animals.get(i));
+            }
+        }
+
+        WorldMap worldMap = simulation.getWorldMap();
+
+        Boundary bounds = worldMap.getCurrentBounds();
+        int height = bounds.upperBound().getY();
+        int width = bounds.upperBound().getX();
+
+        int bigger = Math.max(height, width);
+        int squareSize = WINDOW_SIZE / bigger;
+
+
+        for (int i = 0; i <= width; i++) {
+            for (int j = 0; j <= height; j++) {
+                if (dominus.contains(worldMap.objectAt(new Vector2d(i, j)))) {
+                    String projectPath = System.getProperty("user.dir");
+                    String imagePath = projectPath + "/src/main/resources/img/Powerful_guinea_pig.png";
+                    Image image = new Image(new FileInputStream(imagePath));
+                    ImageView iv = new ImageView(image);
+                    mapGrid.add(iv, i, j);
+                }
+
+            }
+        }
+    }
 
 
     private void updateChartData() {
