@@ -10,14 +10,16 @@ public class Genome {
 
     public Genome(int n) {
         Random random = new Random();
-        currentIndex = random.nextInt(n);
+        this.currentIndex = random.nextInt(n);
         for (int i=0; i<n; i++) {
             this.genome.add(random.nextInt(8));
         }
     }
 
     public Genome(ArrayList<Integer> genome) {
+        Random random = new Random();
         this.genome = genome;
+        this.currentIndex = random.nextInt(genome.size());
     }
 
     public ArrayList<Integer> getGenome() {

@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import java.util.Random;
+
 public enum MapDirection {
     NORTH,
     NORTH_EAST,
@@ -21,6 +23,13 @@ public enum MapDirection {
             case SOUTH_WEST -> "Poludniowy Zachod";
             case NORTH_WEST -> "Polnocny Zachod";
         };
+    }
+
+
+    public static MapDirection getRandomDirection() {
+        Random random = new Random();
+        MapDirection[] values = MapDirection.values();
+        return values[random.nextInt(values.length)];
     }
 
     public MapDirection moveBy(int n) {

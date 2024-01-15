@@ -16,17 +16,16 @@ public class PoisonousPlants implements PlantGrowthVariant {
 
     RandomFreePositionGenerator generator = new RandomFreePositionGenerator(100);
     @Override
-    public int growPlants(int plantsCount, RectangularFloraMap map) {
-        int counter = 0;
+    public void growPlants(int plantsCount, RectangularFloraMap map) {
         Random random = new Random();
         for(int i = 0; i < plantsCount; i++){
             Optional<Vector2d> position = generator.getPosition();
             if(position.isPresent()){
                 counter++;
                 Vector2d pos = position.get();
-                int randomNumber = random.nextInt(2);
-                if(pos.getX() >= square.lowerBound().getX() && pos.getX() <= square.upperBound().getX()
-                        && pos.getY() >= square.lowerBound().getY() && pos.getY() <= square.upperBound().getY() && randomNumber == 0){
+                if(pos.getX() >= square.lowerBound().getX() && pos.getX() <= square.upperBound().getX() &&
+                        pos.getY() >= square.lowerBound().getY() && pos.getY() <= square.upperBound().getY() &&
+                random.nextInt(2) == 0 /* not always plant here is poisonous */) {
                     map.place(new Plant(pos,true));
                 }
                 else {

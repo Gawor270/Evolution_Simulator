@@ -34,7 +34,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
         this.parents = parents;
         this.position = position;
         this.energy = energy;
-        this.orientation = MapDirection.NORTH;
+        this.orientation = MapDirection.getRandomDirection();
         this.moveVariant = moveVariant;
         statistics.updateStatistics();
     }
@@ -46,7 +46,7 @@ public class Animal implements WorldElement, Comparable<Animal>{
         this.parents = parents;
         this.position = position;
         this.energy = energy;
-        this.orientation = MapDirection.NORTH;
+        this.orientation = MapDirection.getRandomDirection();
         statistics.updateStatistics();
     }
 
