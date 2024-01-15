@@ -51,11 +51,10 @@
 
             </TabPane>
 
-            <VBox alignment="CENTER" style="-fx-background-color: gray">
+            <VBox alignment="CENTER">
                 <Label text="Tracked Animal: "/>
                 <Label fx:id="beforeSelect" text="Click on animal to track its details" />
                 <Label fx:id="selectedAnimalGenome" text="genome: " visible="false"/>
-                <Label fx:id="selectedAnimalActivatedGen" text="activated gen: " visible="false"/>
                 <Label fx:id="selectedAnimalEnergy" text="energy: " visible="false"/>
                 <Label fx:id="selectedAnimalEaten" text="eaten plants: " visible="false"/>
                 <Label fx:id="selectedAnimalChildren" text="children: " visible="false"/>

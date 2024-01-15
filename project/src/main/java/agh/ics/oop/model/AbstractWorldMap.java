@@ -45,9 +45,17 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
 
     public void remove(WorldElement element){
         if(element instanceof Animal){
-            animals.get(element.getPosition()).remove(((Animal)element));
-            if(animals.get(element.getPosition()).isEmpty())
+            Iterator<Animal> iterator = animals.get(element.getPosition()).iterator();
+            while(iterator.hasNext()){
+                Animal animal = iterator.next();
+                if(animal.equals(element)){
+                    iterator.remove();
+                    break;
+                }
+            }
+            if(animals.get(element.getPosition()).isEmpty()){
                 animals.remove(element.getPosition());
+            }
         }
     }
 
@@ -56,7 +64,7 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
         if(element instanceof Animal){
             Vector2d startpos = element.getPosition();
             remove(element);
-            ((Animal) element).move(mapVariant, null);
+            ((Animal) element).move(null);
             String info = "animal moved from" + startpos.toString() + "to" + element.getPosition().toString();
             place(element);
             mapChanged(info);
@@ -69,19 +77,25 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
     }
     @Override
     public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position) && !animals.get(position).isEmpty();
+        return animals.containsKey(position);
     }
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        if(animals.containsKey(position) && !animals.get(position).isEmpty())
-            return animals.get(position).first();
+        if(animals.containsKey(position)) return animals.get(position).first();
         return null;
     }
 
+    public Map<Vector2d, TreeSet<Animal>> getAnimals() {
+        return animals;
+    }
 
     public void setMapVariant(MapVariant mapVariant) {
         this.mapVariant = mapVariant;
+    }
+
+    public MapVariant getMapVariant() {
+        return mapVariant;
     }
 
     @Override

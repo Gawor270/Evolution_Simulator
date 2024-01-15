@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AnimalStatistics {
 
@@ -8,6 +9,8 @@ public class AnimalStatistics {
     private int childrenCounter =0;
     private int descendantsCounter =0;
     private int plantCounter = 0;
+
+    private int deathDay = -1;
 
     private final Animal animal;
     public AnimalStatistics(Animal animal) {
@@ -33,6 +36,12 @@ public class AnimalStatistics {
         }
     }
 
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(age, childrenCounter, descendantsCounter, plantCounter, deathDay);
+    }
+
     public void getOlder(){
         age++;
     }
@@ -47,6 +56,14 @@ public class AnimalStatistics {
 
     public int getDescendantsCounter(){ return descendantsCounter; }
 
+    public int getPlantCounter() {
+        return plantCounter;
+    }
+
+    public int getDeathDay() {
+        return deathDay;
+    }
+
     public void increasePlantCounter(){
         plantCounter++;
     }
@@ -57,6 +74,10 @@ public class AnimalStatistics {
 
     public void increaseDescendantsCounter(){
         descendantsCounter++;
+    }
+
+    public void setDeathDay(int deathDay) {
+        this.deathDay = deathDay;
     }
 
 }

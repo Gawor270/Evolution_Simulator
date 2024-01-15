@@ -1,3 +1,9 @@
+buildscript{
+    if(!JavaVersion.current().isJava11Compatible){
+        throw GradleException("Java 11 or higher is required. If you have Java version 11 or higher installed, but still see this message, please check your JAVA_HOME environment variable.")
+    }
+}
+
 plugins {
     id("application")
     id("java")
@@ -29,8 +35,14 @@ javafx {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.3")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+    sourceCompatibility = JavaVersion.VERSION_17.toString()
+    targetCompatibility = JavaVersion.VERSION_17.toString()
 }

@@ -82,7 +82,6 @@
             <Button fx:id="saveButton" text="Save" onAction="#saveSettings" GridPane.columnIndex="2" GridPane.rowIndex="9" alignment="CENTER"/>
             <Button fx:id="startButton" text="Start" onAction="#startSimulation" GridPane.rowIndex="10" GridPane.columnIndex="1" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
             <TextField fx:id="saveFileName" promptText="Enter File Name" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
-            <CheckBox fx:id="saveToCsv" text = "Save statistics to file" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
         </GridPane>
     </HBox>
 

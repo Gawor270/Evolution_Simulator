@@ -33,9 +33,7 @@ public class AnimalTest {
         Animal animal1 = new Animal((List<Animal>) null, new Vector2d(10, 10), 5, new Genome(genome), new FullPredestination());
 
         assertEquals(new Vector2d(10, 10), animal1.getPosition());
-        animal1.move(map.mapVariant, new Boundary(new Vector2d(0, 0), new Vector2d(10, 10)));
         assertEquals(new Vector2d(10, 10), animal1.getPosition());
-        animal1.move(map.mapVariant, new Boundary(new Vector2d(0, 0), new Vector2d(10, 10)));
         assertEquals(new Vector2d(9, 10), animal1.getPosition());
 
 

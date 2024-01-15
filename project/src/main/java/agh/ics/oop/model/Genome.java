@@ -65,6 +65,20 @@ public class Genome {
         return this.genome.get((currentIndex - 1 + this.genome.size()) % this.genome.size());
     }
 
+    public int getGen(){
+        return this.genome.get((currentIndex - 1 + this.genome.size()) % this.genome.size());
+    }
+
+    @Override
+    public String toString() {
+        return genome.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return genome.hashCode();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == null || !(obj instanceof Genome)) return false;

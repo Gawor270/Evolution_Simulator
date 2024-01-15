@@ -59,15 +59,15 @@ public class Animal implements WorldElement, Comparable<Animal>{
         return this.position.equals((position));
     }
 
-    public void move(MapVariant validator, Boundary bounds) {
-        moveVariant.move(validator, bounds, this);
+    public void move(RectangularFloraMap map) {
+        moveVariant.move(map, this);
     }
 
     public Animal reproduce(Animal other, int breedEnergy, int minMutations, int maxMutations){
         int childEnergy = 2*breedEnergy;
         energy -= breedEnergy;
         other.energy -= breedEnergy;
-        return new Animal(List.of(this, other), position, childEnergy,
+        return new Animal(new ArrayList<>(List.of(this, other)), position, childEnergy,
                 genome.cross(other.getGenome(), energy + breedEnergy,
                         other.getEnergy() + breedEnergy, minMutations, maxMutations), moveVariant);
     }
@@ -104,27 +104,32 @@ public class Animal implements WorldElement, Comparable<Animal>{
 
     @Override
     public String toString() {
-        return asciiRepresentation.get(orientation);
-    }
-    @Override
-    public int hashCode() {
-        return Objects.hash(orientation, position);
+        return String.valueOf(this.energy) + " " + asciiRepresentation.get(orientation);
     }
 
     @Override
     public int compareTo(Animal o) {
-        if(this.energy == o.getEnergy()){
-            if(statistics.getAge() == o.statistics.getAge()){
-                if(statistics.getChildrenCounter() == o.statistics.getChildrenCounter()){
-                    if(this == o){
-                        return 0;
-                    }
-                    return (int) Math.pow(-1, (int) (Math.random() * 2));
-                }
-                return Integer.compare(o.statistics.getChildrenCounter(), statistics.getChildrenCounter());
-            }
-            return Integer.compare(o.statistics.getAge(), statistics.getAge());
+
+        int compareOrientation = Integer.compare(o.getOrientation().ordinal(), this.orientation.ordinal());
+        if(compareOrientation != 0){
+            return compareOrientation;
         }
-        return Integer.compare(o.getEnergy(),this.energy);
+
+        int energyCompare = Integer.compare(o.getEnergy(), this.energy);
+        if(energyCompare != 0){
+            return energyCompare;
+        }
+
+        int ageCompare = Integer.compare(o.statistics.getAge(), statistics.getAge());
+        if(ageCompare != 0){
+            return ageCompare;
+        }
+
+        int childrenCompare = Integer.compare(o.statistics.getChildrenCounter(), statistics.getChildrenCounter());
+        if(childrenCompare != 0){
+            return childrenCompare;
+        }
+
+        return (int) Math.pow(-1, o.hashCode() % 2);
     }
 }
