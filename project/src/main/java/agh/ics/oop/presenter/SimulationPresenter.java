@@ -299,7 +299,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @FXML
-    private void onAnimalButtonClickedt sta(ActionEvent event){
+    private void onAnimalButtonClicked(ActionEvent event){
         List<Animal> toHighlight = simulation.getMostCommonGenomeAnimals();
         for(Animal animal : toHighlight){
             ImageView imageView = imageSupplier.getRedAnimalImage(animal);
