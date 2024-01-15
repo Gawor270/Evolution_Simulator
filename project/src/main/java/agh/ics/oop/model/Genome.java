@@ -73,8 +73,14 @@ public class Genome {
 
     @Override
     public String toString() {
-        return genome.toString();
+        String res = "";
+
+        for(int i = 0; i < genome.size(); i++){
+            res += genome.get(i).toString();
+        }
+        return res;
     }
+
 
     @Override
     public int hashCode() {
