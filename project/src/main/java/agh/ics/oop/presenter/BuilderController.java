@@ -148,6 +148,7 @@ public class BuilderController {
 
         Simulation simulation = builder.build(presenter);
         presenter.setSimulation(simulation);
+        stage.setOnCloseRequest(e -> simulation.stop() );
         Thread thread = new Thread(simulation);
         thread.start();
 

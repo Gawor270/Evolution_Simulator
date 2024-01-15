@@ -19,6 +19,8 @@ public class Simulation implements Runnable{
     private final Object lock = new Object();
     private boolean isPaused = false;
 
+    private boolean stop = false;
+
     public Simulation(SimulationSettings settings){
         statistics = new SimulationStatistics(this);
         statistics.increasePlantsCount(settings.startPlants());
@@ -114,6 +116,7 @@ public class Simulation implements Runnable{
     }
     public void run() {
         while(animals.size() > 0 ){
+            if(stop) return;
             synchronized (lock){
                 while(isPaused){
                     try {
@@ -132,6 +135,9 @@ public class Simulation implements Runnable{
         }
     }
 
+    public void stop(){
+        stop = true;
+    }
     private void executeOneStep(){
         removeDeadAnimals();
         worldMap.notifyObservers(worldMap, "Day " + day);
