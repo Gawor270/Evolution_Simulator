@@ -16,8 +16,9 @@ public class PoisonousPlants implements PlantGrowthVariant {
 
     RandomFreePositionGenerator generator = new RandomFreePositionGenerator(100);
     @Override
-    public void growPlants(int plantsCount, RectangularFloraMap map) {
+    public int growPlants(int plantsCount, RectangularFloraMap map) {
         Random random = new Random();
+        int counter = 0;
         for(int i = 0; i < plantsCount; i++){
             Optional<Vector2d> position = generator.getPosition();
             if(position.isPresent()){

@@ -81,6 +81,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Label selectedAnimalActivatedGen;
     private int day = -1;
     private final int WINDOW_SIZE = 500;
+
+    private boolean fieldsHighlight = false;
     private ImageSupplier imageSupplier;
     @FXML
     public void initialize() {
@@ -177,11 +179,14 @@ public class SimulationPresenter implements MapChangeListener {
             animalsButton.setVisible(true);
             fieldsButton.setVisible(true);
             pauseButton.setText("Resume");
+            fieldsHighlight = false;
         }
 
     }
 
     public void onFieldsButtonClicked(ActionEvent actionEvent) {
+        if (fieldsHighlight) { return; }
+        fieldsHighlight = true;
         Boundary boundary;
         if (simulation.getWorldMap().getPlantGrowthVariant() instanceof PoisonousPlants) {
             boundary = ((PoisonousPlants) simulation.getWorldMap().getPlantGrowthVariant()).getSquare();
