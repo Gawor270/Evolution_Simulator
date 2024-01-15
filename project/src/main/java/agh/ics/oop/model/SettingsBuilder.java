@@ -189,7 +189,7 @@ public class SettingsBuilder {
     public void saveToJson(String name){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            objectMapper.writeValue(new File("./project/src/main/resources/saves",name), this);
+            objectMapper.writeValue(new File("./src/main/resources/saves",name), this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -199,7 +199,7 @@ public class SettingsBuilder {
     public static SettingsBuilder loadFromJson(String name){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(new File("./project/src/main/resources/saves",  name), SettingsBuilder.class);
+            return objectMapper.readValue(new File("./src/main/resources/saves",  name), SettingsBuilder.class);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

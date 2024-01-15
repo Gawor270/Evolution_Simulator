@@ -36,7 +36,7 @@ public class RectangularFloraMap extends AbstractWorldMap {
     public void move(WorldElement element) {
         if(element instanceof Animal){
             remove(element);
-            ((Animal) element).move(mapVariant, globeBounds);
+            ((Animal) element).move(this);
             place(element);
         }
 
@@ -85,6 +85,12 @@ public class RectangularFloraMap extends AbstractWorldMap {
     protected WorldMap getWorldMap() {
         return this;
     }
+
+    public Boundary getGlobeBounds() {
+        return globeBounds;
+    }
+
+    public MapVariant getMapVariant(){return super.getMapVariant();}
 
     public PlantGrowthVariant getPlantGrowthVariant(){return this.plantGrowthVariant;}
 }

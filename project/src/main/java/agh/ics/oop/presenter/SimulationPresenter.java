@@ -77,6 +77,8 @@ public class SimulationPresenter implements MapChangeListener {
     private Label selectedAnimalEaten;
     @FXML
     private Label selectedAnimalDeathDay;
+    @FXML
+    private Label selectedAnimalActivatedGen;
     private int day = -1;
     private final int WINDOW_SIZE = 500;
     private ImageSupplier imageSupplier;
@@ -195,7 +197,7 @@ public class SimulationPresenter implements MapChangeListener {
         int squareSize = WINDOW_SIZE / bigger;
 
         for (int i = boundary.lowerBound().getX(); i <= boundary.upperBound().getX(); i++) {
-            for (int j = boundary.lowerBound().getY(); j <= boundary.upperBound().getY(); j++) {
+            for (int j = boundary.lowerBound().getY(); j < boundary.upperBound().getY(); j++) {
                 javafx.scene.shape.Rectangle square = new Rectangle(squareSize, squareSize);
                 square.setFill(Color.BLUE);
                 square.setOpacity(0.5);
@@ -216,6 +218,8 @@ public class SimulationPresenter implements MapChangeListener {
             beforeSelect.setVisible(false);
             selectedAnimalGenome.setVisible(true);
             selectedAnimalGenome.setText("Genome: " + trackedAnimal.getGenome().toString());
+            selectedAnimalActivatedGen.setVisible(true);
+            selectedAnimalActivatedGen.setText("Activated gen: " + trackedAnimal.getGenome().getGen());
             selectedAnimalEnergy.setVisible(true);
             selectedAnimalEnergy.setText("Energy: " + trackedAnimal.getEnergy());
             selectedAnimalChildren.setVisible(true);
@@ -295,7 +299,7 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     @FXML
-    private void onAnimalButtonClicked(ActionEvent event){
+    private void onAnimalButtonClickedt sta(ActionEvent event){
         List<Animal> toHighlight = simulation.getMostCommonGenomeAnimals();
         for(Animal animal : toHighlight){
             ImageView imageView = imageSupplier.getRedAnimalImage(animal);

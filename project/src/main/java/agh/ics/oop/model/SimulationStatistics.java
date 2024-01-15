@@ -122,7 +122,7 @@ public class SimulationStatistics {
     }
 
     public void addHeader(){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("./project/src/main/java/logs/" + fileName, true))){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/java/logs/" + fileName, true))){
             writer.write("Day,Animals,Plants,Free space,Avg lifespan,Avg energy,Avg children count,Most common genome\n");
         }
         catch (IOException e){
@@ -130,7 +130,7 @@ public class SimulationStatistics {
         }
     }
     public void saveToCsv(){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter("./project/src/main/java/logs/" + fileName, true))){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter("./src/main/java/logs/" + fileName, true))){
             writer.write(simulation.getDay() + "," + getAnimalsCount() + "," + getPlantsCount() + "," + getFreeSpaceCount() + "," +
                     getAvgLifespan() + "," + getAvgEnergy() + "," + getAvgChildrenCount() + "," + getMostCommonGenome() + "\n");
         }

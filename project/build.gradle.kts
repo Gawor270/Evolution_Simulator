@@ -1,3 +1,9 @@
+buildscript{
+    if(!JavaVersion.current().isJava11Compatible){
+        throw GradleException("Java 11 or higher is required. If you have Java version 11 or higher installed, but still see this message, please check your JAVA_HOME environment variable.")
+    }
+}
+
 plugins {
     id("application")
     id("java")

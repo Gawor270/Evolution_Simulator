@@ -85,7 +85,7 @@ public class BuilderController {
 
     @FXML
     public void initialize(){
-        String directoryPath = "./project/src/main/resources/saves";
+        String directoryPath = "./src/main/resources/saves";
 
         // Get the list of files from the directory
         File directory = new File(directoryPath);
@@ -145,7 +145,7 @@ public class BuilderController {
         //stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("NewHope");
+        stage.setTitle("Simulation");
         stage.show();
 
         Simulation simulation = builder.build(presenter);

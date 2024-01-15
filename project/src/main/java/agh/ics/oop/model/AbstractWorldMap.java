@@ -64,7 +64,7 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
         if(element instanceof Animal){
             Vector2d startpos = element.getPosition();
             remove(element);
-            ((Animal) element).move(mapVariant, null);
+            ((Animal) element).move(null);
             String info = "animal moved from" + startpos.toString() + "to" + element.getPosition().toString();
             place(element);
             mapChanged(info);
@@ -92,6 +92,10 @@ abstract class AbstractWorldMap implements WorldMap<WorldElement, Vector2d> {
 
     public void setMapVariant(MapVariant mapVariant) {
         this.mapVariant = mapVariant;
+    }
+
+    public MapVariant getMapVariant() {
+        return mapVariant;
     }
 
     @Override

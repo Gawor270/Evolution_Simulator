@@ -21,8 +21,8 @@ public class ImageSupplier {
     private int squareSize;
 
     public ImageSupplier(SimulationPresenter simulationPresenter){
-        animalImage = new Image(new File("./project/src/main/resources/img/guinea_pig.png").toURI().toString());
-        plantImage = new Image(new File("./project/src/main/resources/img/lettuce.png").toURI().toString());
+        animalImage = new Image(new File("./src/main/resources/img/guinea_pig.png").toURI().toString());
+        plantImage = new Image(new File("./src/main/resources/img/lettuce.png").toURI().toString());
         this.simulationPresenter = simulationPresenter;
         int bigger = Math.max(simulationPresenter.getSimulation().getSettings().mapWidth(), simulationPresenter.getSimulation().getSettings().mapHeight());
         squareSize = simulationPresenter.getWINDOW_SIZE()/bigger;

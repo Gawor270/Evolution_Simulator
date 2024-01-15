@@ -59,8 +59,8 @@ public class Animal implements WorldElement, Comparable<Animal>{
         return this.position.equals((position));
     }
 
-    public void move(MapVariant validator, Boundary bounds) {
-        moveVariant.move(validator, bounds, this);
+    public void move(RectangularFloraMap map) {
+        moveVariant.move(map, this);
     }
 
     public Animal reproduce(Animal other, int breedEnergy, int minMutations, int maxMutations){

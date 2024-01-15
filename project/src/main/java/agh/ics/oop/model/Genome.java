@@ -65,6 +65,10 @@ public class Genome {
         return this.genome.get((currentIndex - 1 + this.genome.size()) % this.genome.size());
     }
 
+    public int getGen(){
+        return this.genome.get((currentIndex - 1 + this.genome.size()) % this.genome.size());
+    }
+
     @Override
     public String toString() {
         return genome.toString();

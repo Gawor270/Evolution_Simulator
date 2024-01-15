@@ -125,7 +125,7 @@ public class Simulation implements Runnable{
             }
             executeOneStep();
             try {
-                sleep(100);
+                sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

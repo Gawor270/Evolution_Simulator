@@ -44,11 +44,19 @@ public class ForestedEquator implements PlantGrowthVariant {
     @Override
     public void setPositions(Boundary boundary) {
         positionGenerator = new RandomFreePositionGenerator(80);
-        equator = new Boundary(new Vector2d(boundary.lowerBound().getX(), boundary.upperBound().getY()/2 - boundary.upperBound().getY()/10),
-                new Vector2d(boundary.upperBound().getX(), boundary.upperBound().getY()/2 + boundary.upperBound().getY()/10));
+        int h = boundary.upperBound().getY() - boundary.lowerBound().getY() + 1;
+        int need = (int) Math.round((float)(h)/5.0);
+        int zone = need/2 ;
+        System.out.println(zone);
+        System.out.println(h);
+        System.out.println(Math.floorDiv(h,2) - zone);
+        System.out.println(Math.floorDiv(h+1,2) +zone);
+        equator = new Boundary(new Vector2d(0 , Math.floorDiv(h,2) - zone),
+                new Vector2d(boundary.upperBound().getX(), Math.floorDiv(h+1,2) +zone));
+
         for(int i = boundary.lowerBound().getX(); i <= boundary.upperBound().getX(); i++){
             for(int j = boundary.lowerBound().getY(); j <= boundary.upperBound().getY(); j++){
-                if(j < equator.lowerBound().getY() || j > equator.upperBound().getY()){
+                if(j < equator.lowerBound().getY() || j >= equator.upperBound().getY()){
                     positionGenerator.addPosition(new Vector2d(i, j));
                 }
                 else{
